@@ -12,13 +12,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+          fetch-depth: 0  # Shallow clones should be disabled for better relevancy of analysis
       - name: SonarCloud Scan
-  uses: SonarSource/sonarcloud-github-action@v2
-  with:
-    projectKey: AshishProponentTech_sonu-hair-app
-    organization: AshishProponentTech
-  env:
-    SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-  SONAR_PROJECT_KEY: AshishProponentTech_sonu-hair-app
-  SONAR_ORGANIZATION: AshishProponentTech
+        uses: SonarSource/sonarcloud-github-action@v2
+        with:
+          projectKey: AshishProponentTech_sonu-hair-app
+          organization: AshishProponentTech
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
