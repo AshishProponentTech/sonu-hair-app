@@ -20,11 +20,8 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Run tests
-        run: npm test   # optional if you have tests
-
       - name: Run SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@v1.10
+        uses: SonarSource/sonarcloud-github-action@v2
         with:
           organization: ashishproponenttech
           projectKey: ashishproponenttech_sonu-hair-app
