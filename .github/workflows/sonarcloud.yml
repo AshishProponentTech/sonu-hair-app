@@ -21,9 +21,11 @@ jobs:
         run: npm install
 
       - name: Run SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@v2
-        with:
-          args: >
-            -Dsonar.organization=ashishproponenttech
-            -Dsonar.projectKey=ashishproponenttech_sonu-hair-app
-            -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+  uses: SonarSource/sonarcloud-github-action@v2
+  env:
+    SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  with:
+    args: >
+      -Dsonar.organization=ashishproponenttech
+      -Dsonar.projectKey=ashishproponenttech_sonu-hair-app
+      -Dsonar.login=${{ secrets.SONAR_TOKEN }}
