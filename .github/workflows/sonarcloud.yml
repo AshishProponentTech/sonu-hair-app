@@ -13,8 +13,10 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-      - name: SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@v5
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_PROJECT_KEY: ashishproponenttech_sonu-hair-app
+      - name: SonarCloud Scan
+  uses: SonarSource/sonarcloud-github-action@v2
+  with:
+    projectKey: AshishProponentTech_sonu-hair-app
+    organization: AshishProponentTech
+  env:
+    SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
