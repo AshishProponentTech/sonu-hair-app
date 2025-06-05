@@ -16,7 +16,7 @@ const Tab = createBottomTabNavigator();
 const CustomTabBar = ({ state, descriptors, navigation }) => {
   const { guestMode } = useContext(AppStateContext);
   const focusedColor = "#EECA86";
-  const inactiveColor = "white";
+  const inactiveColor = "#fff";
 
   return (
     <View style={styles.tabContainer}>
