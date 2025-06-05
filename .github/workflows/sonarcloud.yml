@@ -23,6 +23,7 @@ jobs:
       - name: Run SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v2
         with:
-          organization: ashishproponenttech
-          projectKey: ashishproponenttech_sonu-hair-app
-          token: ${{ secrets.SONAR_TOKEN }}
+          args: >
+            -Dsonar.organization=ashishproponenttech
+            -Dsonar.projectKey=ashishproponenttech_sonu-hair-app
+            -Dsonar.login=${{ secrets.SONAR_TOKEN }}
