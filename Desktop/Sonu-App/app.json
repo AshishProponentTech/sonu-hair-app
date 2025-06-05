@@ -1,0 +1,53 @@
+{
+  "expo": {
+    "name": "sonuhaircut",
+    "slug": "sonuhaircut",
+    "version": "2.0.32",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "targetSdkVersion": 33
+          }
+        }
+      ],
+      "expo-secure-store"
+    ],
+    "splash": {
+      "image": "./assets/splash-new.jpg",
+      "backgroundColor": "#000000",
+      "resizeMode": "cover"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "buildNumber": "1.39",
+      "bundleIdentifier": "com.sonuhaircut"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#000000"
+      },
+      "versionCode": 71,
+      "package": "com.sonuhaircut"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "940cf4ce-aac2-4654-b998-85cfa4f0edee"
+      }
+    }
+  }
+}
