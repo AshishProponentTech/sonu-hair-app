@@ -21,7 +21,7 @@ import { toggleTheme, saveUserToken } from "../../actions";
 import { baseURL } from "../../constants";
 import axios from "axios";
 import { responsive } from "../../../../helper/responsive";
-import Background from "../../../assets/images/background/SignupBackground.png";
+import Background from "../../../assets/images/background/SplashBackground.png";
 import logo from "../../../assets/logo2.png";
 import Spinner from "react-native-loading-spinner-overlay";
 

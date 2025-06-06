@@ -8,7 +8,6 @@ import {
   Image,
   Pressable,
   StatusBar,
-  TextInput,
   TouchableOpacity,
 } from "react-native";
 import {
@@ -21,21 +20,23 @@ import Spinner from "react-native-loading-spinner-overlay";
 import configResponse from "../config/constant";
 import { loginUpRequest } from "../service/User";
 import logo from "../assets/logo2.png";
-import Background from "../assets/splash-new.jpg";
+import Background from "../assets/images/background/SplashBackground.png";
 import { AppStateContext } from "../helper/AppStateContaxt";
-import { RadioButton } from "react-native-paper";
+import { RadioButton, TextInput } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import splash from "../assets/splash-new.jpg";
+import splash from "../assets/images/background/SplashBackground.png";
 import { responsive } from "../helper/responsive";
 import Entypo from "react-native-vector-icons/Entypo";
 import { useDispatch } from "react-redux";
 import { AuthContext } from "../helper/AuthContext";
 import { isTablet } from "../components/tablet";
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons'; 
+
 function Login({ navigation }) {
   const { setGuestMode, guestMode } = React.useContext(AppStateContext);
   const { signInByEmail } = React.useContext(AuthContext);
@@ -230,27 +231,9 @@ function Login({ navigation }) {
     const placeholderText = selectLoginTypeStatus ? "Phone Number" : "Email";
 
     if (isNumber(username)) {
-      //console.log("data", selectLoginTypeOtp);
       if (selectLoginTypeOtp) {
-        // console.log("Phone");
-
         return (
           <View style={{ width: "80%" }}>
-            {/* <PhoneInput
-              ref={phoneInput}
-              value={phone}
-              defaultCode="CA"
-              layout="first"
-              onChangeText={(text) => onChangePhone(text)}
-              onChangeFormattedText={(text) => setFormattedValue(text)}
-              onChangeCountry={(country) => setCode(country.callingCode[0])}
-              containerStyle={styles.phoneContainerStyle}
-              textInputStyle={styles.textInputStyle}
-              codeTextStyle={styles.codeTextStyle}
-              textStyle={{ width: 200 }}
-              textProps={{ placeholder: "Enter Phone number" }}
-            /> */}
-
             <TextInput
               style={styles.loginInput}
               placeholder={placeholderText}
@@ -304,72 +287,6 @@ function Login({ navigation }) {
               theme={{ color: "#333333" }}
               textColor="black"
             />
-            {/* <TextInput
-              style={styles.loginInput}
-              placeholder="Password"
-              placeholderTextColor="black"
-              mode="outlined"
-              value={password}
-              onChangeText={onPasswordChange}
-              theme={{ color: "#333333" }}
-              textColor="black"
-              secureTextEntry={true}
-            /> */}
-            {/* <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
-                marginTop: 10,
-              }}
-            > */}
-            {/* <TouchableOpacity
-                style={{
-                  padding: 10,
-                  borderRadius: 10,
-                  alignSelf: "flex-start",
-                }}
-              >
-                <Text
-                  style={{ textAlign: "center", color: "#FFC000" }}
-                  disabled={username ? false : true}
-                  onPress={() =>
-                    navigation.navigate("OtpVerification", {
-                      username: username,
-                    })
-                  }
-                >
-                  Forgot Password ?
-                </Text>
-              </TouchableOpacity> */}
-            {/* <TouchableOpacity
-                style={{
-                  color: "#FFC000",
-                  padding: 10,
-                  borderRadius: 10,
-                  width: "30%",
-                  alignSelf: "flex-end",
-                  borderWidth: 1,
-                  borderColor: "#FFC000",
-                }}
-                disabled={username ? false : true}
-                onPress={() => {
-                  setSelectLoginStatus(() => true),
-                    setSelectLoginTypeOtp(() => true);
-                }}
-              >
-                <Text
-                  style={{ textAlign: "center", color: "#FFC000" }}
-                  disabled={username ? false : true}
-                  onPress={() => {
-                    setSelectLoginStatus(() => true),
-                      setSelectLoginTypeOtp(() => true);
-                  }}
-                >
-                  Login OTP
-                </Text>
-              </TouchableOpacity> */}
-            {/* </View> */}
             <Pressable
               onPressIn={() => {
                 LoginRequest("PhoneOtp"), setRescheduleAppointment();
@@ -395,22 +312,6 @@ function Login({ navigation }) {
               theme={{ color: "#333333" }}
               textColor="black"
             />
-            {/* <TouchableOpacity
-              style={{
-                color: "#FFC000",
-                padding: 10,
-                borderRadius: 10,
-                width: "30%",
-                alignSelf: "flex-end",
-                backgroundColor: "#FFC000",
-              }}
-              disabled={username ? false : true}
-              onPress={() => setSelectLoginTypeOtp(false)}
-            >
-              <Text style={{ textAlign: "center", color: "#FFC000" }}>
-                <Entypo name="arrow-long-left" size={20} color={"black"} />
-              </Text>
-            </TouchableOpacity> */}
             <Pressable
               onPressIn={() => {
                 LoginRequest("EmailOtp"), setRescheduleAppointment();
@@ -419,20 +320,7 @@ function Login({ navigation }) {
             >
               <Text style={styles.SubmitButtonText}>Send Otp</Text>
             </Pressable>
-            <TouchableOpacity
-              // style={{
-              //   color: "#FFC000",
-              //   padding: 10,
-              //   borderRadius: 10,
-              //   width: "30%",
-              //   // height: "100%",
-              //   alignSelf: "center",
-              //   // backgroundColor: "#FFC000",
-              //   marginTop: 10,
-              //   alignItems: "center",
-              //   flexDirection: "row",
-              //   gap: 4,
-              // }}
+            <TouchableOpacityBase
               style={[
                 styles.guestBtn,
                 {
@@ -442,21 +330,15 @@ function Login({ navigation }) {
                   gap: 4,
                 },
               ]}
-              // disabled={username ? false : true}
               onPress={() => setSelectLoginTypeOtp(false)}
             >
               <Entypo name="arrow-long-left" size={20} color={"white"} />
-              <Text
-                // style={{
-                //   textAlign: "center",
-                //   color: "white",
-                //   alignItems: "center",
-                // }}
+              <TextInput
                 style={styles.guestBtnText}
               >
                 Go Back
-              </Text>
-            </TouchableOpacity>
+              </TextInput>
+            </TouchableOpacityBase>
           </View>
         );
       } else {
@@ -472,72 +354,6 @@ function Login({ navigation }) {
               theme={{ color: "#333333" }}
               textColor="black"
             />
-            {/* <TextInput
-              style={styles.loginInput}
-              placeholder="Password"
-              placeholderTextColor="black"
-              mode="outlined"
-              value={password}
-              onChangeText={onPasswordChange}
-              theme={{ color: "#333333" }}
-              textColor="black"
-              secureTextEntry={true}
-            /> */}
-            {/* <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                marginTop: 10,
-                justifyContent: "space-between",
-              }}
-            >
-              <TouchableOpacity
-                style={{
-                  padding: 10,
-                  borderRadius: 10,
-                  alignSelf: "flex-start",
-                }}
-              >
-                <Text
-                  style={{ textAlign: "center", color: "#FFC000" }}
-                  disabled={username ? false : true}
-                  onPress={() =>
-                    navigation.navigate("OtpVerification", {
-                      username: username,
-                    })
-                  }
-                >
-                  Forgot Password ?
-                </Text>
-              </TouchableOpacity> */}
-            {/* <TouchableOpacity
-                style={{
-                  color: "#FFC000",
-                  padding: 10,
-                  borderRadius: 10,
-                  width: "30%",
-                  alignSelf: "flex-end",
-                  borderWidth: 1,
-                  borderColor: "#FFC000",
-                }}
-                disabled={username ? false : true}
-                onPress={() => {
-                  setSelectLoginStatus(() => false),
-                    setSelectLoginTypeOtp(() => true);
-                }}
-              >
-                <Text
-                  style={{ textAlign: "center", color: "#FFC000" }}
-                  disabled={username ? false : true}
-                  onPress={() => {
-                    setSelectLoginStatus(() => false),
-                      setSelectLoginTypeOtp(() => true);
-                  }}
-                >
-                  Login OTP
-                </Text>
-              </TouchableOpacity> */}
-            {/* </View> */}
             <Pressable
               onPressIn={() => {
                 LoginRequest("EmailPassword"), setRescheduleAppointment();
@@ -550,10 +366,7 @@ function Login({ navigation }) {
         );
       }
     }
-
-    return;
   };
-
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.container}>
@@ -578,7 +391,7 @@ function Login({ navigation }) {
               <Text
                 style={[
                   styles.text_dis,
-                  { fontWeight: "bold", paddingRight: 20 },
+                  { fontWeight: "bold" },
                 ]}
               >
                 Login As
@@ -608,15 +421,19 @@ function Login({ navigation }) {
             ) : (
               <View style={{ width: "80%"}}>
                 <TextInput
-                  style={[styles.loginInput, { borderWidth: 1 }]}
+                  style={[styles.loginInput]}
                   placeholder="Enter your mobile number"
                   placeholderTextColor="black"
-                  mode="outlined"
                   keyboardType="numeric"
                   value={username}
                   onChangeText={onChangeUserName}
                   theme={{ color: "#333333" }}
-                  textColor="black"
+                    textColor="black"
+                    left={
+              <TextInput.Icon
+                icon={() => <Icon name="phone-in-talk" size={24} color="#D1AE6C" />}
+                 />
+                 }
                 />
                 <Pressable
                   onPressIn={() => {
@@ -698,11 +515,8 @@ const styles = StyleSheet.create({
   loginInput: {
     marginVertical: 10,
     backgroundColor: "white",
-    paddingVertical: 15,
-    borderRadius: 4,
-    paddingLeft: 10,
+    borderRadius: 8,
     fontSize: 16,
-    borderRadius: 10,
     width: "100%",
   },
 
@@ -733,7 +547,6 @@ const styles = StyleSheet.create({
     fontSize: 26 * responsive(),
     textAlign: "center",
     fontWeight: "700",
-    //color: "#FFC000",
     color: "#D2AE6A",
     marginBottom: 10,
     fontFamily: "Inter_700Bold",
@@ -813,6 +626,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+    marginTop: 10,
+    gap: 20,
     marginBottom: 20,
   },
   radioWrapper: {

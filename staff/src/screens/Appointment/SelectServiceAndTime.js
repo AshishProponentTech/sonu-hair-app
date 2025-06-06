@@ -112,7 +112,6 @@ function AddAppointment(props) {
 
   useEffect(() => {
     if (err != "") {
-      // ToastAndroid.show(err, ToastAndroid.SHORT);
       Toast.show(err, {
         duration: Toast.durations.LONG,
       });
@@ -255,44 +254,6 @@ function AddAppointment(props) {
                   ))}
                 </View>
               ) : (
-                // <FlatList
-                //   data={slots?.slot}
-                //   horizontal={true}
-                //   //data={getSlotUpdateData}
-                //   keyExtractor={(item) => item}
-                //   numColumns={isTablet() ? 6 : 4}
-                //   style={{}}
-                //   renderItem={({ item: data, index: idx }) => (
-                //     <View
-                //       style={{
-                //         ...styles.singleTimeSlot,
-                //         // borderWidth: selectedSlot.id === idx ? 2 : 0,
-                //         // borderColor:
-                //         //   selectedSlot.id === idx ? props.color.primaryColor : "",
-                //         backgroundColor:
-                //           selectedSlot.id === idx ? "#D2AE6A" : "white",
-                //       }}
-                //     >
-                //       <TouchableOpacity
-                //         onPress={() => hanldeStartTimeSlot(data, idx)}
-                //       >
-                //         {data ? (
-                //           <Text
-                //             style={[
-                //               styles.singleTimeSlotText,
-                //               {
-                //                 color:
-                //                   selectedSlot.id === idx ? "white" : "black",
-                //               },
-                //             ]}
-                //           >
-                //             {data}
-                //           </Text>
-                //         ) : null}
-                //       </TouchableOpacity>
-                //     </View>
-                //   )}
-                // />
                 <View
                   style={{
                     flexDirection: "row",
@@ -400,7 +361,6 @@ function AddAppointment(props) {
             <Text style={{ fontSize: 14 * responsive() }}> Select Client</Text>
           </Button>
           <View style={styles.space}></View>
-          <View style={styles.space}></View>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -461,10 +421,8 @@ const styles = StyleSheet.create({
     paddingVertical: isTablet() ? 5 : 0,
   },
   serviceViewWrapper: {
-    //paddingVertical: 20,
     justifyContent: "center",
     alignItems: "center",
-    //padding: 20,
     marginTop: 10,
   },
   serviceContainer: {
@@ -506,10 +464,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   singleTimeSlot: {
-    // paddingVertical: 2,
     alignItems: "center",
     backgroundColor: "white",
-    borderWidth: 1,
     padding: 2,
     width: isTablet() ? 120 : 80,
     margin: 5,
@@ -531,7 +487,7 @@ const styles = StyleSheet.create({
     fontWeight: "350",
   },
   space: {
-    height: 100,
+    height: 120,
   },
   serviceText: {
     fontSize: 15,

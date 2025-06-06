@@ -370,7 +370,7 @@ const Dashboard = ({ navigation }) => {
                       <Text
                         numberOfLines={2}
                         ellipsizeMode="tail"
-                        style={[styles.nameHeading, { fontWeight: "400", fontSize: 18 }]}
+                        style={[styles.nameTop]}
                       >
                         Welcome,
                       </Text>
@@ -483,44 +483,42 @@ const Dashboard = ({ navigation }) => {
                   </View>
                   <View style={[styles.newSection]}>
                     <Text style={[styles.commonHeading]}>Top Services</Text>
-                    <View >
-                      <FlatList style={styles.bgWhite}
-                        showsHorizontalScrollIndicator={false}
-                        horizontal={true}
-                        data={getCategoryData}
-                        renderItem={({ item }) => (
-                          <View>
-                            <Pressable
-                              onPress={() =>
-                                navigation.navigate("Services", {
-                                  screen: "Service",
-                                  params: { id: item.id },
-                                })
-                              }
-                              style={{ width: 180 }}>
+                    <FlatList style={styles.bgWhite}
+                      showsHorizontalScrollIndicator={false}
+                      horizontal={true}
+                      data={getCategoryData}
+                      renderItem={({ item }) => (
+                        <View>
+                          <Pressable
+                            onPress={() =>
+                              navigation.navigate("Services", {
+                                screen: "Service",
+                                params: { id: item.id },
+                              })
+                            }
+                            style={{ width: 180 }}>
+                            <View
+                              style={[
+                                styles.SubUlgrid,
+                                styles.shadowProp,
+                                styles.box,
+                              ]} >
+                              <Image
+                                resizeMode="cover"
+                                style={styles.imageIcon}
+                                source={item.image}
+                              />
                               <View
-                                style={[
-                                  styles.SubUlgrid,
-                                  styles.shadowProp,
-                                  styles.box,
-                                ]} >
-                                <Image
-                                  resizeMode="cover"
-                                  style={styles.imageIcon}
-                                  source={item.image}
-                                />
-                                <View
-                                  style={styles.overlayImage}
-                                ></View>
-                                <Text style={styles.SubLigrid}>
-                                  {item.name}
-                                </Text>
-                              </View>
-                            </Pressable>
-                          </View>
-                        )}
-                      />
-                    </View>
+                                style={styles.overlayImage}
+                              ></View>
+                              <Text style={styles.SubLigrid}>
+                                {item.name}
+                              </Text>
+                            </View>
+                          </Pressable>
+                        </View>
+                      )}
+                    />
                   </View>
                   <View style={[styles.newSection]}>
                     {guestMode ? null : (
@@ -572,7 +570,6 @@ const Dashboard = ({ navigation }) => {
                 </View>
                 )}
               </View>
-
               <Location navigation="" />
             </View>
           </View>
@@ -715,9 +712,11 @@ const styles = StyleSheet.create({
   name: {
     marginLeft: 20,
   },
+  nameTop: { fontWeight: "400", fontSize: 18, color: "white" },
   nameHeading: {
     fontSize: 25 * responsive(),
     fontWeight: "bold",
+    color: "white"
   },
   link: {
     paddingVertical: 8,
@@ -773,7 +772,7 @@ const styles = StyleSheet.create({
     elevation: 10,
   },
   SubLigrid: {
-    fontSize: 16 * responsive(),
+    fontSize: 14 * responsive(),
     fontFamily: configResponse.fontFamily,
     color: "white",
     marginTop: 15,

@@ -18,7 +18,7 @@
       "expo-secure-store"
     ],
     "splash": {
-      "image": "./assets/splash-new.jpg",
+      "image": "./assets/images/background/SplashBackground.png",
       "backgroundColor": "#000000",
       "resizeMode": "cover"
     },

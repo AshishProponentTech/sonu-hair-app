@@ -1,13 +1,9 @@
 import Client from "./mainClient";
 import Staff from "./staff/mainStaff";
-import * as React from "react";
 import {
   View,
   StyleSheet,
   Image,
-  Dimensions,
-  Text,
-  SafeAreaView,
   Animated,
 } from "react-native";
 import {
@@ -21,26 +17,19 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import splash from "./assets/splash-new.jpg";
+import splash from "./assets/images/background/SplashBackground.png";
 import logo from "./assets/logo2.png";
 import { useEffect, useRef } from "react";
 import * as SecureStore from "expo-secure-store";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useState } from "react";
 import {
   SafeAreaProvider,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
 import { RootSiblingParent } from "react-native-root-siblings";
-import { clearLogEntriesAsync } from "expo-updates";
-import ChangePassword from "./screens/ChangePassword";
-import NewPassword from "./screens/NewPassword";
-import OtpVerification from "./screens/OtpVerification";
-import ForgotPassword from "./screens/ForgotPassword";
 import { Provider } from "react-redux";
 import { Provider as PaperProvider } from "react-native-paper";
 import store from "./staff/src/store";
-import Login from "./screens/Login";
 
 function AnimatedSplash() {
   const fadeAnim = useRef(new Animated.Value(0)).current;

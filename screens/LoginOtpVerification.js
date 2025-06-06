@@ -27,7 +27,7 @@ import { ResendOtpRequest } from "../service/Otp";
 import { AuthContext } from "../helper/AuthContext";
 // images
 //import Background from "../assets/images/background/Hair_Salon_Stations.jpg";
-import Background from "../assets/images/background/SignupBackground.png";
+import Background from "../assets/images/background/SplashBackground.png";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,

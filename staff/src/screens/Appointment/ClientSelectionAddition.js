@@ -251,13 +251,16 @@ function AddAppointment(props) {
               <View style={styles.inputWrapper}>
                 <View style={styles.phoneContainer}>
                   {/* onChangePhone */}
-
                   {test && (
                     <PhoneInput
                       value={phone}
                       defaultCode="CA"
                       layout="first"
                       placeholder="Enter At Least Four Digit Number"
+                      textInputProps={{
+                      placeholderTextColor: 'gray', 
+                      style: { fontSize: 14.5 }, 
+                      }}
                       onChangeText={(text) => onChangePhone(text)}
                       onChangeCountry={setPhoneCountry}
                       containerStyle={styles.phoneContainerStyle}
@@ -317,12 +320,9 @@ function AddAppointment(props) {
 
                               shadowOffset: {
                                 width: 0,
-
                                 height: 3,
                               },
-
                               shadowOpacity: 0.2,
-
                               shadowRadius: 5,
                             }}
                           >
@@ -334,7 +334,6 @@ function AddAppointment(props) {
                     </View>
                   )
                 }
-
                 {!show && result !== null && (
                   <View>
                     <TextInput
@@ -342,7 +341,6 @@ function AddAppointment(props) {
                       value={firstname}
                       style={[
                         styles.addClientInput,
-
                         { alignSelf: "center", width: "90%", marginTop: 10 },
                       ]}
                       onChangeText={(text) => {
@@ -355,14 +353,11 @@ function AddAppointment(props) {
                     />
                   </View>
                 )}
-
                 {addClient && (
                   <View
                     style={{
                       width: "90%",
-
                       alignSelf: "center",
-
                       marginTop: 10,
                     }}
                   >
@@ -378,29 +373,23 @@ function AddAppointment(props) {
                       }}
                       textColor="black"
                     />
-
                     <View style={[styles.inputWrapper, styles.gender]}>
                       <Text>Gender :</Text>
-
                       <RadioButton.Android
                         value={gender}
                         status={gender === "Male" ? "checked" : "unchecked"}
                         onPress={() => setGender("Male")}
                         color={props.color.primaryColor}
                       />
-
                       <Text>Male</Text>
-
                       <RadioButton.Android
                         value={gender}
                         status={gender === "Female" ? "checked" : "unchecked"}
                         onPress={() => setGender("Female")}
                         color={props.color.primaryColor}
                       />
-
                       <Text>Female</Text>
                     </View>
-
                     {!loading && (
                       <View style={styles.additionBtnContainer}>
                         <Button
@@ -409,15 +398,12 @@ function AddAppointment(props) {
                           onPress={handleAddClient}
                           style={{
                             backgroundColor: "#D2AE6A",
-
                             marginHorizontal: 10,
-
                             paddingHorizontal: 10,
                           }}
                         >
                           Add
                         </Button>
-
                         <Button
                           icon="close-circle-outline"
                           mode="contained"
@@ -427,9 +413,7 @@ function AddAppointment(props) {
                           contentStyle={{}}
                           style={{
                             backgroundColor: "#D2AE6A",
-
                             marginHorizontal: 10,
-
                             paddingHorizontal: 10,
                           }}
                         >
@@ -437,7 +421,6 @@ function AddAppointment(props) {
                         </Button>
                       </View>
                     )}
-
                     {loading && (
                       <View style={styles.additionBtnContainer}>
                         <Headline style={styles.appointmentHeadline}>
@@ -459,12 +442,8 @@ function AddAppointment(props) {
               mode="contained"
               style={[
                 styles.nextBtn,
-
                 {
-                  //                backgroundColor: props.color.primaryColor
-
                   backgroundColor: "#D2AE6A",
-
                   marginTop: 15,
                 },
               ]}
@@ -496,210 +475,117 @@ export default connect(mapStateToProps, mapDispatchToProps)(AddAppointment);
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-
     backgroundColor: "white",
   },
 
   phoneContainer: {
     backgroundColor: "white",
-
     width: wp("100%"),
-
     position: "relative",
-
     zIndex: 20,
   },
 
   gender: {
-    //display: "flex",
-
     flexDirection: "row",
-
     justifyContent: "flex-start",
-
     alignItems: "center",
-
     backgroundColor: "#F6F6F6",
-
     padding: 10,
-
     marginTop: 10,
-
     borderTopLeftRadius: 10,
-
     borderTopRightRadius: 10,
   },
 
   resultText: {
     fontSize: 15 * responsive(),
-
     width: wp("100%"),
-
     padding: 10,
-
     textAlign: "center",
-
     borderColor: "lightgray",
-
-    //borderWidth: 0.5,
-
     zIndex: 10,
   },
-
   clientResult: {
     fontSize: 14 * responsive(),
-
     textAlign: "right",
-
     width: wp("100%"),
-
     backgroundColor: "white",
-
-    //borderWidth: 1,
-
     backgroundColor: "white",
-
     marginTop: 10,
-
     width: "90%",
-
     paddingBottom: 150,
-
     alignSelf: "center",
   },
-
   phoneContainerStyle: {
     backgroundColor: "#EAEAEA",
-
-    //borderWidth: 0.5,
-
     width: wp("90%"),
-
     alignSelf: "center",
-
     borderRadius: 10,
-
-    // marginBottom: 20,
-
-    // borderColor: "lightgray"
   },
-
   textInputStyle: {
     fontSize: 16 * responsive(),
   },
-
   textInputStyle: {
     fontSize: 16 * responsive(),
   },
-
   appointmentHeadline: {
-    fontSize: 20 * responsive(),
-
+    fontSize: 18 * responsive(),
     margin: 0,
-
     textAlign: "center",
-
     fontWeight: "bold",
-
     color: "black",
   },
-
   codeTextStyle: {
     fontSize: 16 * responsive(),
-
-    // height: 20 * responsive(),
-
-    // top: -2,
-
     color: "#000000",
   },
-
   existingClientContainer: {
     justifyContent: "center",
-
     alignItems: "center",
-
     flex: 1,
-
-    paddingTop: 10,
-
     paddingTop: 10,
   },
-
   pickerContainer: {
     flexDirection: "row",
-
     alignItems: "center",
   },
-
   newClientContainer: {
     flex: 4,
-
     paddingTop: 20,
   },
-
   addClientContainer: {
     flex: 1,
   },
-
   dataPicker: {
     width: wp("100%"),
-
     backgroundColor: "white",
   },
-
   inputWrapper: {
     flex: 3,
   },
-
   additionBtnContainer: {
     flexDirection: "row",
-
     justifyContent: "center",
-
     alignItems: "center",
-
-    //marginVertical: 20,
-
     paddingVertical: 20,
-
     backgroundColor: "#F6F6F6",
-
     borderBottomLeftRadius: 10,
-
     borderBottomRightRadius: 10,
   },
-
   addClientInput: {
     backgroundColor: "#F6F6F6",
-
-    //color: "black",
-
     color: "red",
-
     borderRadius: 10,
   },
-
   btnContainer: {
     flex: 1,
-
     paddingHorizontal: 10,
-
-    //padding: 10,
-
     alignItems: "center",
-
     position: "absolute",
-
     zIndex: 999,
-
     bottom: Platform.OS == "ios" ? "15%" : "12%",
-
     alignSelf: "center",
   },
-
   nextBtn: {
-    //width: wp("60%"),
     width: "auto",
     paddingHorizontal: 10,
     paddingVertical: isTablet() ? 5 : 0,

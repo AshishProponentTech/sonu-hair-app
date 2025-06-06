@@ -15,7 +15,7 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { toggleTheme, saveUserToken, userLogin } from "../../actions";
-import Background from "../../../../assets/images/background/SignupBackground.png";
+import Background from "../../../../assets/images/background/SplashBackground.png";
 import logo from "../../../../assets/logo2.png";
 import Toast from "react-native-root-toast";
 import { responsive } from "../../../../helper/responsive";
@@ -137,7 +137,7 @@ function Home(props) {
             textColor="black"
             left={
               <TextInput.Icon
-                icon={() => <Icon name="account" size={20} color="#D1AE6C" />}
+                icon={() => <Icon name="account" size={24} color="#D1AE6C" />}
               />
             }
           />
@@ -175,10 +175,9 @@ function Home(props) {
                 styles.loginBtn,
                 {
                   backgroundColor: "#D1AE6C",
-                  width: Platform.OS == "ios" ? "80%" : "50%",
+                  width: Platform.OS == "ios" ? "80%" : "85%",
                   marginLeft: "auto",
                   marginRight: "auto",
-
                   borderRadius: 40,
                 },
               ]}
@@ -247,9 +246,8 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     backgroundColor: "white",
     borderRadius: 8,
-    // display: "flex",
-    fontSize: 14 * responsive(),
-    width: "90%",
+    fontSize: 16,
+    width: "100%",
   },
   loginBtn: {
     marginVertical: 10,
@@ -290,7 +288,6 @@ const styles = StyleSheet.create({
     fontSize: 26 * responsive(),
     textAlign: "center",
     fontWeight: "700",
-    //color: "#FFC000",
     color: "#D2AE6A",
     marginBottom: 10,
     fontFamily: "Inter_700Bold",

@@ -25,7 +25,7 @@ import configResponse from "../config/constant";
 
 import logo from "../assets/logo2.png";
 
-import Background from "../assets/images/background/SignupBackground.png";
+import Background from "../assets/images/background/SplashBackground.png";
 
 import { AppStateContext } from "../helper/AppStateContaxt";
 
