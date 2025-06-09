@@ -22,7 +22,6 @@ import {
 import { CLEAR_ERRORS } from "../actions/actionTypes";
 import { getAPP } from "../services/authServices";
 import NetInfo from "@react-native-community/netinfo";
-import moment from "moment";
 import Toast from "react-native-root-toast";
 import { responsive } from "../../../helper/responsive";
 import { useIsFocused } from "@react-navigation/native";

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import PropTypes from 'prop-types';
 import {
   View,
   Text,
@@ -9,7 +10,6 @@ import {
   Image,
   FlatList,
 } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 // constants imports
 import configResponse from "../config/constant";
 import { AuthContext } from "../helper/AuthContext";
@@ -20,9 +20,9 @@ import Icon3 from "../assets/images/icons/icon-3.png";
 import Icon4 from "../assets/images/icons/icon-4.png";
 import Icon5 from "../assets/images/icons/icon-5.png";
 import Icon6 from "../assets/images/icons/icon-6.png";
-import Icon7 from "../assets/images/icons/icon-5.png";
-import Icon8 from "../assets/images/icons/icon-3.png";
-import Icon9 from "../assets/images/icons/icon-4.png";
+import Icon7 from "../assets/images/icons/icon-7.png";
+import Icon8 from "../assets/images/icons/icon-8.png";
+import Icon9 from "../assets/images/icons/icon-9.png";
 // services
 import { getCategory } from "../service/CategoryWiseService";
 import { AppStateContext } from "../helper/AppStateContaxt";
@@ -36,21 +36,8 @@ import ScreenHeader from "../components/screenHeader";
 import Spinner from "../helper/Spinner";
 function Home({ navigation }) {
   const [isLoading, setIsLoading] = useState(false);
-  const [getCategoryData, setCategory] = useState([]);
-  const { signOut, state } = React.useContext(AuthContext);
-  const { setLocationModal, locationModal, location } =
-    React.useContext(AppStateContext);
-  const navigate = useNavigation();
-  const route = useRoute();
-  const [page, setPage] = React.useState("");
-
-  const openDrawer = () => {
-    navigate.dispatch(DrawerActions.openDrawer());
-  };
-  const _location = () => {
-    setLocationModal(!locationModal);
-  };
-
+  const [categoryData, setCategoryData] = useState([]);
+  const { state } = React.useContext(AuthContext);
   function Item({ item }) {
     const itemIcon = {
       "Haircut & Beard": Icon1,
@@ -63,13 +50,12 @@ function Home({ navigation }) {
       Facial: Icon8,
       "Wig & Patch": Icon9,
     };
-
     return (
       <Pressable
         style={{
           width: "50%",
           paddingHorizontal: 5,
-        }} // Adjusted width and added paddingHorizontal for spacing
+        }} 
         onPress={() =>
           navigation.navigate("Service", {
             id: item.id,
@@ -91,7 +77,7 @@ function Home({ navigation }) {
         setIsLoading(false);
         if (response?.status == 200) {
           const output = response?.data?.data;
-          setCategory(output);
+          setCategoryData(output);
         } else {
           configResponse.errorMSG(response?.data?.message);
         }
@@ -118,10 +104,10 @@ function Home({ navigation }) {
               paddingHorizontal: 10, 
               paddingBottom: 50
               }}
-              data={getCategoryData}
+              data={categoryData}
               keyExtractor={(item) => item.id.toString()}
               renderItem={({ item }) => <Item item={item} />}
-              numColumns={2} // Assuming you want 3 items per row
+              numColumns={2}
             />
           ) : (
             <Spinner />
@@ -130,8 +116,10 @@ function Home({ navigation }) {
     </SafeAreaView>
   );
 }
+Home.propTypes = {
+  navigation: PropTypes.object.isRequired,
+};
 export default Home;
-// StyleSheet
 const styles = StyleSheet.create({
   container: {
     flex: 1,
