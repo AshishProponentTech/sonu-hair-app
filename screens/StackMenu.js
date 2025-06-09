@@ -8,7 +8,6 @@ import NewPassword from "../screens/NewPassword";
 import AccountVerification from "../screens/AccountVerification";
 import LoginOtpVerification from "../screens/LoginOtpVerification";
 import DrawerMenu from "./DrawerMenu";
-import Root from "../helper/Root";
 const Stack = createNativeStackNavigator();
 
 function StackMenu() {
@@ -55,11 +54,6 @@ function StackMenu() {
         options={{ headerShown: false }}
       />
 
-      <Stack.Screen
-        name="Root"
-        component={Root}
-        options={{ headerShown: false }}
-      />
     </Stack.Navigator>
   );
 }

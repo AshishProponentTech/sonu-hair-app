@@ -35,7 +35,7 @@ import Entypo from "react-native-vector-icons/Entypo";
 import { useDispatch } from "react-redux";
 import { AuthContext } from "../helper/AuthContext";
 import { isTablet } from "../components/tablet";
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons'; 
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 function Login({ navigation }) {
   const { setGuestMode, guestMode } = React.useContext(AppStateContext);
@@ -76,19 +76,19 @@ function Login({ navigation }) {
             style={
               isTablet()
                 ? {
-                    height: hp("100%"),
-                    backgroundColor: "black",
-                    display: "flex",
-                    width: wp("100%"),
-                    alignSelf: "center",
-                  }
+                  height: hp("100%"),
+                  backgroundColor: "black",
+                  display: "flex",
+                  width: wp("100%"),
+                  alignSelf: "center",
+                }
                 : {
-                    height: hp("100%"),
-                    backgroundColor: "black",
-                    display: "flex",
-                    width: wp("100%"),
-                    alignSelf: "center",
-                  }
+                  height: hp("100%"),
+                  backgroundColor: "black",
+                  display: "flex",
+                  width: wp("100%"),
+                  alignSelf: "center",
+                }
             }
             source={splash}
           />
@@ -165,21 +165,16 @@ function Login({ navigation }) {
           //configResponse.errorMSG(error.message);
         });
     } else if (type == "PhoneOtp") {
-      if (!country_code) {
-        return configResponse.errorMSG(
-          `Enter phone number or select country code`
-        );
-      }
-      //if (!phone)
       if (!username) {
         return configResponse.errorMSG(`Please enter your phone number`);
       }
+
       setIsLoading(true);
       const data = {
-        //phone,
         phone: username,
         otp: true,
       };
+
       loginUpRequest(data)
         .then(async (response) => {
           setIsLoading(false);
@@ -187,20 +182,20 @@ function Login({ navigation }) {
             onChangePhone(null);
             setGuestMode(false);
             configResponse.successMSG(response.data.message);
+            // Navigate to OTP screen with the token
             navigation.navigate("LoginOtpVerification", {
               token: response?.data?.token,
+              phone: username // Pass phone number if needed
             });
           } else {
-            // configResponse.errorMSG(response.data.errors);
-            if (response.data.errors.validate.phone) {
+            if (response.data?.errors?.validate?.phone) {
               configResponse.errorMSG(response.data.errors.validate.phone[0]);
             }
           }
         })
         .catch((error) => {
           setIsLoading(false);
-
-          //configResponse.errorMSG(error.message);
+          configResponse.errorMSG(error.message || "Failed to send OTP");
         });
     }
   };
@@ -276,7 +271,7 @@ function Login({ navigation }) {
         );
       } else {
         return (
-          <View style={{ width: "80%"}}>
+          <View style={{ width: "80%" }}>
             <TextInput
               style={styles.loginInput}
               placeholder={"Enter your mobile number"}
@@ -419,7 +414,7 @@ function Login({ navigation }) {
             {showLogin ? (
               loginType()
             ) : (
-              <View style={{ width: "80%"}}>
+              <View style={{ width: "80%" }}>
                 <TextInput
                   style={[styles.loginInput]}
                   placeholder="Enter your mobile number"
@@ -428,12 +423,12 @@ function Login({ navigation }) {
                   value={username}
                   onChangeText={onChangeUserName}
                   theme={{ color: "#333333" }}
-                    textColor="black"
-                    left={
-              <TextInput.Icon
-                icon={() => <Icon name="phone-in-talk" size={24} color="#D1AE6C" />}
-                 />
-                 }
+                  textColor="black"
+                  left={
+                    <TextInput.Icon
+                      icon={() => <Icon name="phone-in-talk" size={24} color="#D1AE6C" />}
+                    />
+                  }
                 />
                 <Pressable
                   onPressIn={() => {

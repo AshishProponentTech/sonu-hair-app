@@ -134,7 +134,7 @@ function AddAppointment(props) {
         },
         data: clientData,
       };
-      const { data } = await axios(config).catch((err) => {});
+      const { data } = await axios(config).catch((err) => { });
 
       if (data.status) {
         setLoading(false);
@@ -245,192 +245,173 @@ function AddAppointment(props) {
               {addClient ? "Add Client" : "Choose Existing Client"}
             </Headline>
           </View>
-
           <View style={styles.newClientContainer}>
             <View style={styles.addClientContainer}>
-              <View style={styles.inputWrapper}>
-                <View style={styles.phoneContainer}>
-                  {/* onChangePhone */}
-                  {test && (
-                    <PhoneInput
-                      value={phone}
-                      defaultCode="CA"
-                      layout="first"
-                      placeholder="Enter At Least Four Digit Number"
-                      textInputProps={{
-                      placeholderTextColor: 'gray', 
-                      style: { fontSize: 14.5 }, 
-                      }}
-                      onChangeText={(text) => onChangePhone(text)}
-                      onChangeCountry={setPhoneCountry}
-                      containerStyle={styles.phoneContainerStyle}
-                      textInputStyle={styles.textInputStyle}
-                      codeTextStyle={styles.codeTextStyle}
-                      theme={{
-                        colors: { primary: props.color.secondaryColor },
-                      }}
-                      textColor="black"
-                    />
-                  )}
-                </View>
-
-                {
-                  //show
-
-                  show && (
-                    <View style={styles.clientResult}>
-                      {phone && indicatorLoading ? (
-                        <View>
-                          <ActivityIndicator size="large" />
-
-                          <Text
-                            style={{
-                              fontSize: 18,
-
-                              fontWeight: "800",
-
-                              textAlign: "center",
-
-                              marginVertical: 10,
-                            }}
-                          >
-                            Loading Details ....
-                          </Text>
-                        </View>
-                      ) : null}
-
-                      {!indicatorLoading &&
-                        phone.length >= 4 &&
-                        clients?.map((data, idx) => (
-                          <Pressable
-                            key={idx}
-                            onPress={() => handleResult(data)}
-                            style={{
-                              //borderWidth: 1,
-
-                              borderRadius: 10,
-
-                              marginBottom: 10,
-
-                              backgroundColor: "white",
-
-                              elevation: 8,
-
-                              shadowColor: "#000000",
-
-                              shadowOffset: {
-                                width: 0,
-                                height: 3,
-                              },
-                              shadowOpacity: 0.2,
-                              shadowRadius: 5,
-                            }}
-                          >
-                            <Text style={styles.resultText}>
-                              {data.first_name} {data.last_name} ({data.phone}){" "}
-                            </Text>
-                          </Pressable>
-                        ))}
-                    </View>
-                  )
-                }
-                {!show && result !== null && (
-                  <View>
-                    <TextInput
-                      label=" name"
-                      value={firstname}
-                      style={[
-                        styles.addClientInput,
-                        { alignSelf: "center", width: "90%", marginTop: 10 },
-                      ]}
-                      onChangeText={(text) => {
-                        setFirstname(text);
-                      }}
-                      theme={{
-                        colors: { primary: props.color.secondaryColor },
-                      }}
-                      textColor="black"
-                    />
-                  </View>
-                )}
-                {addClient && (
-                  <View
-                    style={{
-                      width: "90%",
-                      alignSelf: "center",
-                      marginTop: 10,
+              <View style={styles.phoneContainer}>
+                {/* onChangePhone */}
+                {test && (
+                  <PhoneInput
+                    value={phone}
+                    defaultCode="CA"
+                    layout="first"
+                    placeholder="Enter At Least 4 Digit Number"
+                    onChangeText={(text) => onChangePhone(text)}
+                    onChangeCountry={setPhoneCountry}
+                    containerStyle={styles.phoneContainerStyle}
+                    textInputStyle={styles.textInputStyle}
+                    codeTextStyle={styles.codeTextStyle}
+                    textInputProps={{
+                      placeholderTextColor: 'gray',
+                      numberOfLines: 1,
+                      ellipsizeMode: 'tail',
+                      style:{
+                        fontSize: 14.5,
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      },
                     }}
-                  >
-                    <TextInput
-                      label="name"
-                      value={firstname}
-                      style={styles.addClientInput}
-                      onChangeText={(text) => {
-                        setFirstname(text);
-                      }}
-                      theme={{
-                        colors: { primary: props.color.secondaryColor },
-                      }}
-                      textColor="black"
-                    />
-                    <View style={[styles.inputWrapper, styles.gender]}>
-                      <Text>Gender :</Text>
-                      <RadioButton.Android
-                        value={gender}
-                        status={gender === "Male" ? "checked" : "unchecked"}
-                        onPress={() => setGender("Male")}
-                        color={props.color.primaryColor}
-                      />
-                      <Text>Male</Text>
-                      <RadioButton.Android
-                        value={gender}
-                        status={gender === "Female" ? "checked" : "unchecked"}
-                        onPress={() => setGender("Female")}
-                        color={props.color.primaryColor}
-                      />
-                      <Text>Female</Text>
-                    </View>
-                    {!loading && (
-                      <View style={styles.additionBtnContainer}>
-                        <Button
-                          icon="check-all"
-                          mode="contained"
-                          onPress={handleAddClient}
-                          style={{
-                            backgroundColor: "#D2AE6A",
-                            marginHorizontal: 10,
-                            paddingHorizontal: 10,
-                          }}
-                        >
-                          Add
-                        </Button>
-                        <Button
-                          icon="close-circle-outline"
-                          mode="contained"
-                          onPress={() => {
-                            setAddclient(!addClient);
-                          }}
-                          contentStyle={{}}
-                          style={{
-                            backgroundColor: "#D2AE6A",
-                            marginHorizontal: 10,
-                            paddingHorizontal: 10,
-                          }}
-                        >
-                          Back
-                        </Button>
-                      </View>
-                    )}
-                    {loading && (
-                      <View style={styles.additionBtnContainer}>
-                        <Headline style={styles.appointmentHeadline}>
-                          Please Wait
-                        </Headline>
-                      </View>
-                    )}
-                  </View>
+                    theme={{
+                      colors: { primary: props.color.secondaryColor },
+                    }}
+                    textColor="black"
+                  />
                 )}
               </View>
+              {
+                show && (
+                  <View style={styles.clientResult}>
+                    {phone && indicatorLoading ? (
+                      <View>
+                        <ActivityIndicator size="large" />
+                        <Text
+                          style={{
+                            fontSize: 18,
+                            fontWeight: "800",
+                            textAlign: "center",
+                            marginVertical: 10,
+                          }}
+                        >Loading Details ....
+                        </Text>
+                      </View>
+                    ) : null}
+                    {!indicatorLoading &&
+                      phone.length >= 4 &&
+                      clients?.map((data, idx) => (
+                        <Pressable
+                          key={idx}
+                          onPress={() => handleResult(data)}
+                          style={{
+                            borderRadius: 10,
+                            marginBottom: 10,
+                            backgroundColor: "white",
+                            elevation: 8,
+                            shadowColor: "#000000",
+                            shadowOffset: {
+                              width: 0,
+                              height: 3,
+                            },
+                            shadowOpacity: 0.2,
+                            shadowRadius: 5,
+                          }}
+                        >
+                          <Text style={styles.resultText}>
+                            {data.first_name} {data.last_name} ({data.phone}){" "}
+                          </Text>
+                        </Pressable>
+                      ))}
+                  </View>
+                )
+              }
+              {!show && result !== null && (
+                <View>
+                  <TextInput
+                    label=" name"
+                    value={firstname}
+                    style={[
+                      styles.addClientInput,
+                      { alignSelf: "center", width: "90%", marginTop: 10 },
+                    ]}
+                    onChangeText={(text) => {
+                      setFirstname(text);
+                    }}
+                    theme={{
+                      colors: { primary: props.color.secondaryColor },
+                    }}
+                    textColor="black"
+                  />
+                </View>
+              )}
+              {addClient && (
+                <View
+                  style={{
+                    width: "90%",
+                    alignSelf: "center",
+                    marginTop: 10,
+                  }}
+                >
+                  <TextInput
+                    label="name"
+                    value={firstname}
+                    style={styles.addClientInput}
+                    onChangeText={(text) => {
+                      setFirstname(text);
+                    }}
+                    theme={{
+                      colors: { primary: props.color.secondaryColor },
+                    }}
+                    textColor="black"
+                  />
+                  <View style={[styles.inputWrapper, styles.gender]}>
+                    <Text>Gender :</Text>
+                    <RadioButton.Android
+                      value={gender}
+                      status={gender === "Male" ? "checked" : "unchecked"}
+                      onPress={() => setGender("Male")}
+                      color={"#D2AE6A"}
+                    />
+                    <Text>Male</Text>
+                    <RadioButton.Android
+                      value={gender}
+                      status={gender === "Female" ? "checked" : "unchecked"}
+                      onPress={() => setGender("Female")}
+                      color={"#D2AE6A"}
+                    />
+                    <Text>Female</Text>
+                  </View>
+                  {!loading && (
+                    <View style={styles.additionBtnContainer}>
+                      <Button
+                        mode="contained"
+                        onPress={handleAddClient}
+                        style={{
+                          backgroundColor: "#D2AE6A",
+                          marginHorizontal: 10,
+                          paddingHorizontal: 10,
+                        }} >Add</Button>
+                      <Button
+                        mode="contained"
+                        onPress={() => {
+                          setAddclient(!addClient);
+                        }}
+                        contentStyle={{}}
+                        style={{
+                          backgroundColor: "#D2AE6A",
+                          marginHorizontal: 10,
+                          paddingHorizontal: 10,
+                        }}
+                      >Back</Button>
+                    </View>
+                  )}
+                  {loading && (
+                    <View style={styles.additionBtnContainer}>
+                      <Headline style={styles.appointmentHeadline}>
+                        Please Wait
+                      </Headline>
+                    </View>
+                  )}
+                </View>
+              )}
             </View>
           </View>
         </ScrollView>
@@ -524,9 +505,6 @@ const styles = StyleSheet.create({
   textInputStyle: {
     fontSize: 16 * responsive(),
   },
-  textInputStyle: {
-    fontSize: 16 * responsive(),
-  },
   appointmentHeadline: {
     fontSize: 18 * responsive(),
     margin: 0,
@@ -535,7 +513,7 @@ const styles = StyleSheet.create({
     color: "black",
   },
   codeTextStyle: {
-    fontSize: 16 * responsive(),
+    fontSize: 15 * responsive(),
     color: "#000000",
   },
   existingClientContainer: {
