@@ -112,7 +112,6 @@ function Home({ navigation, color, removeUserToken, toggleTheme, route }) {
     const backAction = () => {
       if (backPressCount.current === 1) {
         BackHandler.exitApp();
-        return true;
       } else {
         Toast.show("Press again to exit", {
           duration: Toast.durations.LONG,
@@ -121,7 +120,6 @@ function Home({ navigation, color, removeUserToken, toggleTheme, route }) {
         setTimeout(() => {
           backPressCount.current = 0;
         }, 2000);
-
         return true;
       }
     };
