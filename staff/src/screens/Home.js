@@ -13,10 +13,7 @@ import {
 } from "react-native";
 import { connect, useSelector, useDispatch } from "react-redux";
 import { toggleTheme, removeUserToken, saveUserToken } from "../actions";
-import {
-  getAppointmentCount,
-  getAppointment,
-} from "../actions/appoinmentsActions";
+import { getAppointmentCount, getAppointment, loadAppointment} from "../actions/appoinmentsActions";
 import { Ionicons, AntDesign, SimpleLineIcons } from "@expo/vector-icons";
 import {
   widthPercentageToDP as wp,
@@ -24,17 +21,17 @@ import {
 } from "react-native-responsive-screen";
 import { CLEAR_ERRORS } from "../actions/actionTypes";
 import { getAPP } from "../services/authServices";
-import { loadAppointment } from "../actions/appoinmentsActions";
 import NetInfo from "@react-native-community/netinfo";
 import moment from "moment";
 import Toast from "react-native-root-toast";
 import { responsive } from "../../../helper/responsive";
-import { useIsFocused, useRoute } from "@react-navigation/native";
+import { useIsFocused } from "@react-navigation/native";
 import { isTablet } from "../../../components/tablet";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
+import PropTypes from "prop-types";
 
-function Home({ navigation, color, removeUserToken, toggleTheme, route }) {
+function Home({ navigation, color, removeUserToken, toggleTheme }) {
   const date = new Date();
   const currentMonth = date.toLocaleString('default', { month: 'long' }); // "May"
   const currentYear = date.getFullYear(); // 2025
@@ -63,14 +60,6 @@ function Home({ navigation, color, removeUserToken, toggleTheme, route }) {
     () => appointmentCount?.yearly_appointments,
     [appointmentCount?.yearly_appointments]
   );
-
-  const sortedLatestAppointment = latestAppointment?.sort((a, b) =>
-    moment(a.start_time, "hh:mm a").diff(moment(b.start_time, "hh:mm a"))
-  );
-
-  const Navigate = () =>
-    navigation.navigate("Appointment", { screen: "ViewAppointment" });
-
   const showAlert = () =>
     Alert.alert("No Internet", "Please check your internet connection");
 
@@ -248,7 +237,6 @@ function Home({ navigation, color, removeUserToken, toggleTheme, route }) {
                   </View>
                 </View>
               )}
-              {/* {appointmentCountLoad && latestAppointment?.length > 0 && null} */}
               {appointmentCountLoad && latestAppointment?.length === 0 && (
                 <View style={[styles.pagerWrapper]}>
                   <AntDesign
@@ -331,9 +319,13 @@ function mapDispatchToProps(dispatch) {
     removeUserToken: () => dispatch(removeUserToken()),
   };
 }
-
+Home.propTypes = {
+  navigation: PropTypes.object.isRequired,
+  color: PropTypes.object,
+  removeUserToken: PropTypes.func,
+  toggleTheme: PropTypes.func,
+};
 export default connect(mapStateToProps, mapDispatchToProps)(Home);
-
 const styles = StyleSheet.create({
   cardSection: {
     borderColor: "#333",
