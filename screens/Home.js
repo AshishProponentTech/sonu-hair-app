@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import {
   View,
   Text,
@@ -10,10 +10,8 @@ import {
   Image,
   FlatList,
 } from "react-native";
-// constants imports
 import configResponse from "../config/constant";
 import { AuthContext } from "../helper/AuthContext";
-// images imports/
 import Icon1 from "../assets/images/icons/icon-1.png";
 import Icon2 from "../assets/images/icons/icon-2.png";
 import Icon3 from "../assets/images/icons/icon-3.png";
@@ -25,57 +23,61 @@ import Icon8 from "../assets/images/icons/icon-8.png";
 import Icon9 from "../assets/images/icons/icon-9.png";
 // services
 import { getCategory } from "../service/CategoryWiseService";
-import { AppStateContext } from "../helper/AppStateContaxt";
-import {
-  useNavigation,
-  DrawerActions,
-  useRoute,
-} from "@react-navigation/native";
-import { responsive } from "../helper/responsive";
 import ScreenHeader from "../components/screenHeader";
+import { responsive } from "../helper/responsive";
 import Spinner from "../helper/Spinner";
+
+function Item({ item, navigation }) {
+  const itemIcon = {
+    "Haircut & Beard": Icon1,
+    "Men Color Hair & Beard": Icon2,
+    Threading: Icon3,
+    "Body Wax": Icon4,
+    "Perming/Curls": Icon5,
+    "Smooth & Straight Hairs": Icon6,
+    "Girl Hair cut & Styling": Icon7,
+    Facial: Icon8,
+    "Wig & Patch": Icon9,
+  };
+  return (
+    <Pressable
+      style={{
+        width: "50%",
+        paddingHorizontal: 5,
+      }}
+      onPress={() => navigation.navigate("Service", { id: item.id })}
+    >
+      <View style={[styles.SubUlgrid]}>
+        <Image
+          resizeMode="cover"
+          source={itemIcon[item.name] ?? Icon1}
+          style={{ tintColor: "#D2AE6A" }}
+        />
+        <Text style={styles.SubLigrid}>{item.name}</Text>
+      </View>
+    </Pressable>
+  );
+}
+
+Item.propTypes = {
+  item: PropTypes.shape({
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    name: PropTypes.string.isRequired,
+  }).isRequired,
+  navigation: PropTypes.object.isRequired,
+};
+
 function Home({ navigation }) {
   const [isLoading, setIsLoading] = useState(false);
   const [categoryData, setCategoryData] = useState([]);
   const { state } = React.useContext(AuthContext);
-  function Item({ item }) {
-    const itemIcon = {
-      "Haircut & Beard": Icon1,
-      "Men Color Hair & Beard": Icon2,
-      Threading: Icon3,
-      "Body Wax": Icon4,
-      "Perming/Curls": Icon5,
-      "Smooth & Straight Hairs": Icon6,
-      "Girl Hair cut & Styling": Icon7,
-      Facial: Icon8,
-      "Wig & Patch": Icon9,
-    };
-    return (
-      <Pressable
-        style={{
-          width: "50%",
-          paddingHorizontal: 5,
-        }} 
-        onPress={() =>
-          navigation.navigate("Service", {
-            id: item.id,
-          })
-        }
-      >
-        <View style={[styles.SubUlgrid]}>
-          <Image resizeMode="cover" source={itemIcon[item.name] ?? Icon1} style={{ tintColor: '#D2AE6A' }}  />
-          <Text style={styles.SubLigrid}>{item.name}</Text>
-        </View>
-      </Pressable>
-    );
-  }
 
   useEffect(() => {
     setIsLoading(true);
     getCategory()
       .then((response) => {
         setIsLoading(false);
-        if (response?.status == 200) {
+        if (response?.status === 200) {
           const output = response?.data?.data;
           setCategoryData(output);
         } else {
@@ -94,32 +96,34 @@ function Home({ navigation }) {
     <SafeAreaView style={styles.container}>
       <ScreenHeader title={"Services"} onPress={() => navigation.goBack()} />
       <StatusBar backgroundColor="black" barStyle="dark-content" />
-        <View style={styles.MasterView} contentContainerStyle={styles.scrollStyle}
->
-          {!isLoading ? (
-            <FlatList
+      <View style={styles.MasterView}>
+        {!isLoading ? (
+          <FlatList
             style={{ flex: 1 }}
             contentContainerStyle={{
               paddingVertical: 20,
-              paddingHorizontal: 10, 
-              paddingBottom: 50
-              }}
-              data={categoryData}
-              keyExtractor={(item) => item.id.toString()}
-              renderItem={({ item }) => <Item item={item} />}
-              numColumns={2}
-            />
-          ) : (
-            <Spinner />
-          )}
-        </View>
+              paddingHorizontal: 10,
+              paddingBottom: 50,
+            }}
+            data={categoryData}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => <Item item={item} navigation={navigation} />}
+            numColumns={2}
+          />
+        ) : (
+          <Spinner />
+        )}
+      </View>
     </SafeAreaView>
   );
 }
+
 Home.propTypes = {
   navigation: PropTypes.object.isRequired,
 };
+
 export default Home;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -188,5 +192,4 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     textAlign: "center",
   },
-  scrollStyle: {},
 });

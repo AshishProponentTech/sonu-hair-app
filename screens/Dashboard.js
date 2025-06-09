@@ -360,7 +360,7 @@ const Dashboard = ({ navigation }) => {
                         ) : (
                           <Image
                             resizeMode="cover"
-                            style={[styles.userProfile, { width: 120, height: 120 }]}
+                            style={[styles.userProfile, {width: 80, height: 80, borderRadius: 50,}]}
                             source={{ uri: UserPic }}
                           />
                         )}
@@ -698,12 +698,10 @@ const styles = StyleSheet.create({
   },
   userWrapper: {
     flexDirection: "row",
-
     alignItems: "center",
     justifyContent: "space-between",
     marginTop: 5,
-    width: "90%",
-    paddingHorizontal: 20,
+    padding: 15,
   },
   userProfile: {
     borderRadius: 100,

@@ -271,7 +271,7 @@ function Home({ navigation, color, removeUserToken, toggleTheme }) {
               }}>
               <View>
                 <Text
-                  style={styles.heading} >
+                  style={[styles.heading,{marginTop: 20}]} >
                   Appointments
                 </Text>
               </View>
@@ -405,10 +405,9 @@ const styles = StyleSheet.create({
   },
   topDataWrapper: {
     paddingBottom: 30,
-    backgroundColor: "transparent", // Remove solid background
+    backgroundColor: "transparent", 
     borderBottomEndRadius: 20,
     borderBottomStartRadius: 20,
-    // Remove duplicate elevation and paddingBottom
   },
   infoWrapper: {
     flexDirection: "row",
@@ -418,7 +417,7 @@ const styles = StyleSheet.create({
     paddingBottom: 0,
   },
   infoImage: {
-    padding: 10, // use number instead of string
+    padding: 10,
     backgroundColor: "#333",
     borderRadius: 100,
   },
