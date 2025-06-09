@@ -28,14 +28,15 @@ import { FlatList } from "react-native-gesture-handler";
 import ScreenHeader from "../../../../components/screenHeader";
 import { isTablet } from "../../../../components/tablet";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Ionicons } from "react-native-vector-icons";
 var moment = require("moment");
 
-function AddAppointment(props) {
+function AddAppointment({route, navigation}) {
   const [fetching, setFetching] = useState({ slot: true, service: true });
   const { services, slots, error } = useSelector((state) => state.AppData);
   const { token, user } = useSelector((state) => state.Auth);
   const dispatch = useDispatch();
-  const lastPageData = props.route.params.appointmentData;
+  const lastPageData = route.params.appointmentData;
   const [err, seterr] = useState("");
   const [selectedService, setSelectedService] = useState({});
   const [selectedSlot, setSelectedSlot] = useState({});
@@ -69,7 +70,7 @@ function AddAppointment(props) {
       end_time: selectedEndSlot,
       service: selectedService,
     };
-    props.navigation.navigate("ClientSelectionAddition", { appointmentData });
+    navigation.navigate("ClientSelectionAddition", { appointmentData });
   };
 
   const hanldeStartTimeSlot = (data, idx) => {
@@ -153,7 +154,7 @@ function AddAppointment(props) {
       <ScrollView>
         <ScreenHeader title={"Add Appointment"}
           mainStyle={{ height: 50, paddingVertical: 10 }}
-          onPress={() => props.navigation.goBack()}
+          onPress={() => navigation.goBack()}
         />
         {services.length > 0 ? (
           <View style={styles.serviceViewWrapper}>
@@ -209,13 +210,12 @@ function AddAppointment(props) {
                 : "No Service Available"}
           </Headline>
         )}
-
         {slots?.slot?.length > 0 ? (
           <>
             <View style={styles.timeSlotView}>
-              <Headline style={styles.appointmentHeadline}>
-                Select Start Time{" "}
-              </Headline>
+              <Text style={styles.appointmentHeadline}>
+                Select Start Time
+              </Text>
               {lastPageData?.date == dateOnly ? (
                 <View
                   style={{
@@ -227,11 +227,10 @@ function AddAppointment(props) {
                   {getSlotUpdateData?.map((data, idx) => (
                     <View
                       key={idx}
-                      style={{
-                        ...styles.singleTimeSlot,
-                        backgroundColor: selectedSlot.id === idx ? "#D2AE6A" : "white",
-
-                      }}
+                      style={[
+                         styles.slotButton,
+                        {backgroundColor: selectedSlot.id === idx ? "#D2AE6A" : "white",}
+                      ]}
                     >
                       <TouchableOpacity
                         onPress={() => hanldeStartTimeSlot(data, idx)}
@@ -239,7 +238,7 @@ function AddAppointment(props) {
                         {data ? (
                           <Text
                             style={[
-                              styles.singleTimeSlotText,
+                              styles.slotText,
                               {
                                 color:
                                   selectedSlot.id === idx ? "white" : "black",
@@ -294,9 +293,9 @@ function AddAppointment(props) {
             </View>
             {selectedEndSlot !== "Invalid date" && (
               <View style={styles.timeSlotView}>
-                <Headline style={styles.appointmentHeadline}>
+                <Text style={[styles.appointmentHeadline, {marginTop: 0 }]}>
                   End Time{" "}
-                </Headline>
+                </Text>
                 <View style={{ alignItems: "center" }}>
                   <View
                     style={{
@@ -337,13 +336,14 @@ function AddAppointment(props) {
 
           </>
         ) : (
-          <Headline style={[styles.appointmentHeadline, { marginTop: 20 }]}>
-            {fetching.slot
-              ? "Select Service "
+            <View style={[styles.alertBox, {marginHorizontal: 16 }]}>
+            <Ionicons name="alert-circle-outline" size={25} style={styles.alertIcon} />
+            <Text>{fetching.slot
+              ? "Please Select a Service"
               : getSlotUpdateData.length == 0 && lastPageData?.date == dateOnly
                 ? "Appointment Time Over,Select Another Date "
-                : "Staff Is On Leave Or No Slots Available"}
-          </Headline>
+                : "Staff Is On Leave Or No Slots Available"}</Text>
+          </View>
         )}
         <View style={styles.btnContainer}>
           <Button
@@ -353,12 +353,11 @@ function AddAppointment(props) {
               styles.nextBtn,
               {
                 backgroundColor: "#D2AE6A",
-                //  props.color.primaryColor
               },
             ]}
             onPress={nextPage}
           >
-            <Text style={{ fontSize: 14 * responsive() }}> Select Client</Text>
+            <Text style={{ fontSize: 14 * responsive() }}>Select</Text>
           </Button>
           <View style={styles.space}></View>
         </View>
@@ -383,6 +382,7 @@ const styles = StyleSheet.create({
   appointmentHeadline: {
     fontSize: 16 * responsive(),
     marginTop: 5,
+    marginBottom:10,
     textAlign: "center",
     fontWeight: "bold",
     color: "black",
@@ -390,7 +390,7 @@ const styles = StyleSheet.create({
   singleTimeEndSlot: {
     padding: 10,
     color: "#333",
-    fontSize: 16 * responsive(),
+    fontSize: 17 * responsive(),
     borderColor: "#f2f2f2",
   },
   pressable: {
@@ -404,14 +404,6 @@ const styles = StyleSheet.create({
     padding: 10,
     alignItems: "flex-end",
     justifyContent: "center",
-  },
-  appointmentHeadline: {
-    fontSize: 18 * responsive(),
-    marginTop: 10,
-    marginBottom: 20,
-    textAlign: "center",
-    fontWeight: "bold",
-    color: "black",
   },
   nextBtn: {
     width: "auto",
@@ -451,10 +443,9 @@ const styles = StyleSheet.create({
     height: 100,
   },
   timeSlotView: {
-    justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: 10,
-    paddingVertical: 15,
+    marginTop: 10,
+    paddingHorizontal: 5,
+    paddingBottom: 10,
   },
 
   slots: {
@@ -494,4 +485,66 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     marginTop: 10,
   },
+   alertBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFF3E0',
+    borderLeftWidth: 4,
+    borderLeftColor: '#D2AE6A',
+    borderRadius: 6,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    marginVertical: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+   alertMessage: {
+    color: '#5D4037',
+    fontSize: 14,
+    fontWeight: '500',
+    flex: 1,
+    lineHeight: 20,
+  },
+  alertIcon: {
+    marginRight: 12,
+    color: '#D2AE6A',
+    fontSize: 20,
+  },
+  SlotBox: {
+      flexDirection: "row",
+      flexWrap: "wrap",
+      paddingBottom: 80,
+    },
+    slotButton: {
+      width: "30%",
+      padding: 6,
+      margin: "1.5%",
+      backgroundColor: "#ffffff",
+      borderRadius: 2,
+      justifyContent: "center",
+      shadowColor: "#ffedcb",
+      borderWidth: 1,
+      borderColor: "#D2AE6A",
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 3.84,
+      elevation: 2,
+    },
+    slotText: {
+      textAlign: "center",
+      color: "#000000",
+      fontSize: 14 * responsive(),
+    },
+    slotButtonActive: {
+      backgroundColor: "#D2AE6A",
+    },
+    slotTextActive: {
+      color: "white",
+    },
 });

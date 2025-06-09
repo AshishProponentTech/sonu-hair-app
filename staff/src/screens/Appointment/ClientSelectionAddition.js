@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-
+import{ useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -11,18 +10,13 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-
 import { connect, useDispatch, useSelector } from "react-redux";
-
 import {
   widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-
 import { Headline, Button, TextInput, RadioButton } from "react-native-paper";
 
 import PhoneInput from "react-native-phone-number-input";
-
 import { getClients } from "../../actions/appDataActions";
 
 import { baseURL } from "../../constants";
@@ -37,17 +31,15 @@ import ScreenHeader from "../../../../components/screenHeader";
 import { isTablet } from "../../../../components/tablet";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-let debouncerPhoneChange;
-
-function AddAppointment(props) {
+function AddAppointment({ route, navigation, color }) {
+  let debouncerPhoneChange;
   const dispatch = useDispatch();
   const { token } = useSelector((state) => state.Auth);
   const { clients } = useSelector((state) => state.AppData);
 
-  const otherPageData = props.route.params.appointmentData;
+  const otherPageData = route.params.appointmentData;
   const [show, setShow] = useState(false);
-  const [addClient, setAddclient] = useState(false);
-
+  const [addClient, setAddClient] = useState(false);
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState("");
@@ -64,9 +56,9 @@ function AddAppointment(props) {
   const [phoneToastCheck, setPhoneToastCheck] = useState(true);
   const getClient = async (userToken, phone) => {
     setIndicatorLoading(() => true);
-    // clearTimeout(() => debouncerPhoneChange);
+      if (debouncerPhoneChange) clearTimeout(debouncerPhoneChange);
     debouncerPhoneChange = setTimeout(async () => {
-      dispatch(await getClients(userToken, phone));
+      await dispatch( getClients(userToken, phone));
       if (clients.length === 0 && phoneToastCheck) {
         setPhoneToastCheck(false);
         Toast.show(
@@ -77,9 +69,8 @@ function AddAppointment(props) {
         );
       }
       setIndicatorLoading(false);
-    }, 100);
+    }, 300);
   };
-
   const handleResult = (data) => {
     onChangePhone(data?.phone);
     setTest(false);
@@ -143,7 +134,7 @@ function AddAppointment(props) {
           duration: Toast.durations.LONG,
         });
         const summary = { ...otherPageData, client: data.client_details };
-        props.navigation.navigate("AppointmentSummary", { summary });
+        navigation.navigate("AppointmentSummary", { summary });
       }
       if (data.status == false) {
         setLoading(false);
@@ -160,26 +151,21 @@ function AddAppointment(props) {
     }
   };
 
-  useEffect(() => {
-    if (phone !== "" && phone.length >= 4) {
-      getClient(token, phone);
-      setCount(0);
-    } else if (
-      phone !== "" &&
-      phone.length >= 4 &&
-      phone.length <= 6 &&
-      phoneToastCheck == false
-    ) {
-      setPhoneToastCheck(true);
-    } else {
-      if (count === 1) {
-        Toast.show("Please Enter At Least Four Digit", {
-          duration: Toast.durations.LONG,
-        });
-      }
-      setCount(() => count + 1);
-    }
-  }, [phone]);
+useEffect(() => {
+  if (phone.length >= 4) {
+    getClient(token, phone);
+    setCount(0);
+    return;
+  }
+  
+  if (phone.length > 0 && count === 1) {
+    Toast.show("Please enter at least four digits", {
+      duration: Toast.durations.LONG,
+    });
+  }
+  
+  setCount(prev => prev + 1);
+}, [phone]);
 
   useEffect(() => {
     if (error != "") {
@@ -214,16 +200,16 @@ function AddAppointment(props) {
       setFirstname("");
       setLastname("");
       setEmail("");
-      setAddclient(true);
+      setAddClient(true);
     } else {
-      setAddclient(false);
+      setAddClient(false);
     }
   }, [result, phone, clients]);
 
   const nextPage = () => {
     const summary = { ...otherPageData, client: result };
     summary?.client?.first_name &&
-      props.navigation.navigate("AppointmentSummary", { summary });
+      navigation.navigate("AppointmentSummary", { summary });
   };
 
   return (
@@ -231,7 +217,7 @@ function AddAppointment(props) {
       <ScreenHeader
         title={"Add Client"}
         mainStyle={{ height: "8%" }}
-        onPress={() => props.navigation.goBack()}
+        onPress={() => navigation.goBack()}
       />
       <KeyboardAvoidingView
         style={{ flex: 1 }}
@@ -272,7 +258,7 @@ function AddAppointment(props) {
                       },
                     }}
                     theme={{
-                      colors: { primary: props.color.secondaryColor },
+                      colors: { primary: color.secondaryColor },
                     }}
                     textColor="black"
                   />
@@ -336,7 +322,7 @@ function AddAppointment(props) {
                       setFirstname(text);
                     }}
                     theme={{
-                      colors: { primary: props.color.secondaryColor },
+                      colors: { primary: color.secondaryColor },
                     }}
                     textColor="black"
                   />
@@ -351,14 +337,14 @@ function AddAppointment(props) {
                   }}
                 >
                   <TextInput
-                    label="name"
+                    label="Name"
                     value={firstname}
                     style={styles.addClientInput}
                     onChangeText={(text) => {
                       setFirstname(text);
                     }}
                     theme={{
-                      colors: { primary: props.color.secondaryColor },
+                      colors: { primary: color.secondaryColor },
                     }}
                     textColor="black"
                   />
@@ -392,7 +378,7 @@ function AddAppointment(props) {
                       <Button
                         mode="contained"
                         onPress={() => {
-                          setAddclient(!addClient);
+                          setAddClient(!addClient);
                         }}
                         contentStyle={{}}
                         style={{

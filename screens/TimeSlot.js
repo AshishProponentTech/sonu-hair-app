@@ -507,7 +507,7 @@ function TimeSlot({ navigation, route }) {
                     isLoadingSlots && {
                       justifyContent: 'center',
                       alignItems: 'center',
-                      flex: 1  // Add this to properly center the spinner
+                      flex: 1 
                     }
                   ]}
                 >
@@ -661,8 +661,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 2,
-
-    //flexWrap: "wrap",
   },
   slotText: {
     textAlign: "center",

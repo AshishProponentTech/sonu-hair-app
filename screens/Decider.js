@@ -1,10 +1,11 @@
-// screens/Decider.js
-import React, { useEffect } from "react";
-import { AnimatedSplash } from "../components/AnimatedSplash"; // You'll separate this too
+import { useEffect } from "react";
+import PropTypes from "prop-types";
+import { AnimatedSplash } from "../components/AnimatedSplash"; 
 import * as SecureStore from "expo-secure-store";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Decider({ navigation }) {
+  console.log(navigation);
   const authCheckHandler = async () => {
     const clientToken = await SecureStore.getItemAsync("userToken");
     const staffToken = await AsyncStorage.getItem("userToken");
@@ -20,3 +21,6 @@ export default function Decider({ navigation }) {
 
   return <AnimatedSplash />;
 }
+Decider.propTypes = {
+  navigation: PropTypes.object.isRequired,
+};
