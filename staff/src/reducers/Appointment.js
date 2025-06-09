@@ -20,7 +20,7 @@ const initialState = {
   latestAppointment: [],
 };
 
-export default AppointmentReducer = (state = initialState, action) => {
+ const AppointmentReducer = (state = initialState, action) => {
   switch (action.type) {
     case ADD_APPOINTMENT_REQUEST:
     case APPOINTMENT_REQUEST:
@@ -90,3 +90,4 @@ export default AppointmentReducer = (state = initialState, action) => {
       return state;
   }
 };
+export default AppointmentReducer;

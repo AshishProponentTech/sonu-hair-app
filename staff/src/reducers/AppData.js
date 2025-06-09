@@ -28,7 +28,7 @@ const initialState = {
   message: null,
 };
 
-export default appData = (state = initialState, action) => {
+const appData = (state = initialState, action) => {
   switch (action.type) {
     case GET_CLIENTS_REQUEST:
     case GET_UNAVAILABLETY_REQUEST:
@@ -115,3 +115,4 @@ export default appData = (state = initialState, action) => {
       return state;
   }
 };
+export default appData;

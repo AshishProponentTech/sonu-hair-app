@@ -36,7 +36,7 @@ import { responsive } from "../../../../helper/responsive";
 
 const Tab = createMaterialBottomTabNavigator();
 
-UpdateAppointment = (props) => {
+const UpdateAppointment = (props) => {
   const dispatch = useDispatch();
   const { appointment } = useSelector((state) => state.AppointmentReducer);
   const { user, token } = useSelector((state) => state.Auth);

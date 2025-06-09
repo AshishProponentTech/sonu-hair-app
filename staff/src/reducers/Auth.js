@@ -22,7 +22,7 @@ const initialState = {
   user: {},
 };
 
-export default Auth = (state = initialState, action) => {
+const Auth = (state = initialState, action) => {
   switch (action.type) {
     case GET_TOKEN:
       return { ...state, token: action.token };
@@ -92,3 +92,4 @@ export default Auth = (state = initialState, action) => {
       return state;
   }
 };
+export default Auth;

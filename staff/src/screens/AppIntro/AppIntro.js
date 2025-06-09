@@ -26,7 +26,7 @@ function AppIntro(props) {
 }
 
 //Function for rendering the App introduction screens
-_renderItem = (data) => {
+const _renderItem = (data) => {
   return (
     <LinearGradient
       colors={data.item.colors}

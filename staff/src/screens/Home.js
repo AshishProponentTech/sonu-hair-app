@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -17,7 +17,7 @@ import {
   getAppointmentCount,
   getAppointment,
 } from "../actions/appoinmentsActions";
-import { Ionicons, AntDesign, FontAwesome6 , SimpleLineIcons } from "@expo/vector-icons";
+import { Ionicons, AntDesign, SimpleLineIcons } from "@expo/vector-icons";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -26,7 +26,6 @@ import { CLEAR_ERRORS } from "../actions/actionTypes";
 import { getAPP } from "../services/authServices";
 import { loadAppointment } from "../actions/appoinmentsActions";
 import NetInfo from "@react-native-community/netinfo";
-import { useState } from "react";
 import moment from "moment";
 import Toast from "react-native-root-toast";
 import { responsive } from "../../../helper/responsive";
@@ -35,7 +34,7 @@ import { isTablet } from "../../../components/tablet";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 
-function Home(props) {
+function Home({ navigation, color, removeUserToken, toggleTheme, route }) {
   const date = new Date();
   const currentMonth = date.toLocaleString('default', { month: 'long' }); // "May"
   const currentYear = date.getFullYear(); // 2025
@@ -43,8 +42,6 @@ function Home(props) {
   const isFocused = useIsFocused();
   const backPressCount = useRef(0);
   const [appointmentCountLoad, setAppointmentCountLoad] = useState(false);
-  const [loading, setLoading] = useState(false);
-
   const dispatch = useDispatch();
   const { token, user } = useSelector((state) => state.Auth);
   const { appointmentCount, latestAppointment, error } = useSelector(
@@ -72,7 +69,7 @@ function Home(props) {
   );
 
   const Navigate = () =>
-    props.navigation.navigate("Appointment", { screen: "ViewAppointment" });
+    navigation.navigate("Appointment", { screen: "ViewAppointment" });
 
   const showAlert = () =>
     Alert.alert("No Internet", "Please check your internet connection");
@@ -136,8 +133,50 @@ function Home(props) {
 
     return () => backHandler.remove();
   }, []);
-
   const cardComponent = (title, count) => {
+    const iconSize = isTablet() ? 30 : 20;
+    const iconColor = color.secondaryColor;
+    let IconComponent;
+    switch (title) {
+      case "Today":
+        IconComponent = SimpleLineIcons;
+        break;
+      case "This Month":
+        IconComponent = Ionicons;
+        break;
+      case "This Year":
+        IconComponent = Ionicons;
+        break;
+      default:
+        IconComponent = AntDesign;
+    }
+
+    let iconName;
+    switch (title) {
+      case "Today":
+        iconName = "calendar";
+        break;
+      case "This Month":
+        iconName = "calendar-number-outline";
+        break;
+      case "This Year":
+        iconName = "calendar-outline";
+        break;
+      default:
+        iconName = "calendar";
+    }
+    let displayTitle;
+    if (title === "Today") {
+      displayTitle = "Today";
+    } else if (title === "All Time") {
+      displayTitle = "All Time";
+    } else if (title === "This Month") {
+      displayTitle = currentMonth;
+    } else if (title === "This Year") {
+      displayTitle = currentYear;
+    } else {
+      displayTitle = title;
+    }
     return (
       <TouchableOpacity
         style={{
@@ -145,50 +184,20 @@ function Home(props) {
           height: isTablet() ? "100%" : "100%",
         }}
         disabled={true}
-        onPress={() => props.navigation.navigate("ViewAppointment")}
+        onPress={() => navigation.navigate("ViewAppointment")}
       >
-        <View
-          style={styles.cardComponent}
-        >
-          <Text
-            ellipsizeMode="tail"
-            style={styles.countNumber}
-          >
+        <View style={styles.cardComponent}>
+          <Text ellipsizeMode="tail" style={styles.countNumber}>
             {count}
           </Text>
-          <View
-            style={styles.cardTitle}
-          >
+          <View style={styles.cardTitle}>
             <View style={{ paddingVertical: 1 }}>
-              {title == "Today" ? (
-                <SimpleLineIcons
-                  name="calendar"
-                  size={isTablet() ? 30 : 20}
-                  color={props.color.secondaryColor}
-                  style={styles.iconCss}
-                />
-              ) : title == "This Month" ? (
-                <Ionicons
-                  name="calendar-number-outline"
-                  size={isTablet() ? 30 : 20}
-                  color={props.color.secondaryColor}
-                  style={styles.iconCss}
-                />
-              ) : title == "This Year" ? (
-                <Ionicons
-                  name="calendar-outline"
-                  size={isTablet() ? 30 : 20}
-                  color={props.color.secondaryColor}
-                  style={styles.iconCss}
-                />
-              ) : (
-                <AntDesign
-                  name="calendar"
-                  size={isTablet() ? 30 : 20}
-                  color={props.color.secondaryColor}
-                  style={styles.iconCss}
-                />
-              )}
+              <IconComponent
+                name={iconName}
+                size={iconSize}
+                color={iconColor}
+                style={styles.iconCss}
+              />
             </View>
             <Text
               ellipsizeMode="tail"
@@ -200,11 +209,7 @@ function Home(props) {
                 fontWeight: Platform.OS == "ios" ? "500" : "700",
               }}
             >
-              {title === "Today" ? "Today"
-                : title === "All Time" ? "All Time"
-                  : title === "This Month" ? currentMonth
-                    : title === "This Year" ? currentYear
-                      : title}
+              {displayTitle}
             </Text>
           </View>
         </View>
@@ -220,12 +225,12 @@ function Home(props) {
             style={styles.backgroundGradient}
           >
             <View style={[styles.topDataWrapper]}>
-            {user?.name && (
+              {user?.name && (
                 <View style={{ paddingRight: 10, paddingLeft: 20 }} >
                   <View style={styles.infoWrapper}>
                     <View style={{ alignItems: "flex-start" }}>
                       <TouchableOpacity
-                        onPress={() => props.navigation.toggleDrawer()}
+                        onPress={() => navigation.toggleDrawer()}
                       >
                         <Image
                           source={require("../../../assets/DrawerMenu/Menu.png")}
@@ -272,8 +277,8 @@ function Home(props) {
                   </Text>
                 </View>
               )}
-              </View>
-            </LinearGradient>
+            </View>
+          </LinearGradient>
           <ScrollView contentContainerStyle={styles.cardSection}>
             <View
               style={{
@@ -342,7 +347,6 @@ const styles = StyleSheet.create({
   },
   cardComponent: {
     paddingTop: 10,
-    alignItems: "center",
     overflow: "hidden",
     justifyContent: "center",
     alignItems: "center",
@@ -350,7 +354,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     shadowColor: '#f3e3c2b5',
     borderColor: '#f3e3c2',
-    borderWidth: 1 ,
+    borderWidth: 1,
     shadowOffset: {
       width: 0,
       height: 2,
@@ -407,7 +411,7 @@ const styles = StyleSheet.create({
     color: "white",
   },
   backgroundGradient: {
-     borderBottomLeftRadius: 20,
+    borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
   },
   topDataWrapper: {
