@@ -1,4 +1,5 @@
-import * as React from "react";
+import { useContext, useState, useEffect } from "react";
+import PropTypes from 'prop-types';
 import {
   View,
   Text,
@@ -8,14 +9,12 @@ import {
   Image,
   Pressable,
   StatusBar,
-  TouchableOpacity,
 } from "react-native";
 import {
   useFonts,
   Inter_400Regular,
   Inter_700Bold,
 } from "@expo-google-fonts/inter";
-import PhoneInput from "react-native-phone-number-input";
 import Spinner from "react-native-loading-spinner-overlay";
 import configResponse from "../config/constant";
 import { loginUpRequest } from "../service/User";
@@ -24,344 +23,113 @@ import Background from "../assets/images/background/SplashBackground.png";
 import { AppStateContext } from "../helper/AppStateContaxt";
 import { RadioButton, TextInput } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import splash from "../assets/images/background/SplashBackground.png";
 import { responsive } from "../helper/responsive";
-import Entypo from "react-native-vector-icons/Entypo";
-import { useDispatch } from "react-redux";
-import { AuthContext } from "../helper/AuthContext";
-import { isTablet } from "../components/tablet";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-function Login({ navigation }) {
-  const { setGuestMode, guestMode } = React.useContext(AppStateContext);
-  const { signInByEmail } = React.useContext(AuthContext);
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [phone, onChangePhone] = React.useState(null);
-  const [country_code, setCode] = React.useState(1);
-  const phoneInput = React.useRef(null);
-  const [formattedValue, setFormattedValue] = React.useState("");
-  const [username, setUsername] = React.useState(null);
-  const [password, setPassword] = React.useState("");
-  const [err, setError] = React.useState("");
-  const [selectLoginTypeOtp, setSelectLoginTypeOtp] = React.useState(false);
-  const [selectLoginTypeStatus, setSelectLoginStatus] = React.useState(false);
-  const [showLogin, setShowLogin] = React.useState(false);
+const EmailIcon = (props) => <Icon name="account" size={24} color="#D1AE6C" {...props} />;
 
-  const dispatch = useDispatch();
+function Login({ navigation }) {
+  const { setGuestMode } = useContext(AppStateContext);
+  const [isLoading, setIsLoading] = useState(false);
+  const [username, setUsername] = useState("");
   let [fontsLoaded] = useFonts({
     Inter_400Regular,
     Inter_700Bold,
   });
-  const setRescheduleAppointment = async () => {
-    try {
-      const idString = String(0);
-      await AsyncStorage.setItem("appointment_id", idString);
-    } catch (error) {
-      console.error("Error occurred while setting appointment ID:", error);
-    }
-  };
-  if (!fontsLoaded) {
+  useEffect(() => {
+    const setRescheduleAppointment = async () => {
+      try {
+        await AsyncStorage.setItem("appointment_id", "0");
+      } catch (error) {
+        console.error("Error occurred while setting appointment ID:", error);
+      }
+    };
     setRescheduleAppointment();
+  }, []);
 
-    return (
-      <>
-        <View style={{ backgroundColor: "black" }}>
-          <Image
-            resizeMode="cover"
-            style={
-              isTablet()
-                ? {
-                  height: hp("100%"),
-                  backgroundColor: "black",
-                  display: "flex",
-                  width: wp("100%"),
-                  alignSelf: "center",
-                }
-                : {
-                  height: hp("100%"),
-                  backgroundColor: "black",
-                  display: "flex",
-                  width: wp("100%"),
-                  alignSelf: "center",
-                }
-            }
-            source={splash}
-          />
-        </View>
-      </>
-    );
-  }
+  const isNumber = value => /^\d+$/.test(value);
 
-  const LoginRequest = (type) => {
-    if (type == "EmailPassword") {
-      if (!username) {
-        configResponse.errorMSG("Please Enter Your UserName/PhoneNumber");
-      } else if (!password) {
-        configResponse.errorMSG("Please enter your password.");
-      } else {
-        setIsLoading(true);
-        const data = {
-          email: username,
-          password: password,
-          otp: false,
-        };
-        signInByEmail(data).then((res) => {
-          setIsLoading(false);
-          onChangePhone(null);
-          setGuestMode(false);
-        });
-      }
-    } else if (type == "PhonePassword") {
-      if (!username) {
-        configResponse.errorMSG("Please Enter Your UserName/PhoneNumber");
-      } else if (!password) {
-        configResponse.errorMSG("Please enter your password");
-      } else {
-        setIsLoading(true);
-        const data = {
-          phone: username,
-          password: password,
-          otp: false,
-        };
-        signInByEmail(data).then((res) => {
-          setIsLoading(false);
-          onChangePhone(null);
-          setGuestMode(false);
-        });
-      }
-    } else if (type == "EmailOtp") {
-      setIsLoading(true);
-      const data = {
-        email: username,
-        otp: true,
-      };
-      loginUpRequest(data)
-        .then(async (response) => {
-          setIsLoading(false);
-          if (response?.status == 200) {
-            onChangePhone(null);
-            setGuestMode(false);
-            //configResponse.successMSG(response.data.message);
-
-            navigation.navigate("LoginOtpVerification", {
-              token: response?.data?.token,
-            });
-          } else {
-            // configResponse.errorMSG(response.data.errors);
-            if (response.data.errors) {
-              if (response.data.errors.validate.email[0]) {
-                configResponse.errorMSG(response.data.errors.validate.email[0]);
-              }
-            }
-          }
-        })
-        .catch((error) => {
-          setIsLoading(false);
-          //configResponse.errorMSG(error.message);
-        });
-    } else if (type == "PhoneOtp") {
-      if (!username) {
-        return configResponse.errorMSG(`Please enter your phone number`);
-      }
-
-      setIsLoading(true);
-      const data = {
-        phone: username,
-        otp: true,
-      };
-
-      loginUpRequest(data)
-        .then(async (response) => {
-          setIsLoading(false);
-          if (response?.status == 200) {
-            onChangePhone(null);
-            setGuestMode(false);
-            configResponse.successMSG(response.data.message);
-            // Navigate to OTP screen with the token
-            navigation.navigate("LoginOtpVerification", {
-              token: response?.data?.token,
-              phone: username // Pass phone number if needed
-            });
-          } else {
-            if (response.data?.errors?.validate?.phone) {
-              configResponse.errorMSG(response.data.errors.validate.phone[0]);
-            }
-          }
-        })
-        .catch((error) => {
-          setIsLoading(false);
-          configResponse.errorMSG(error.message || "Failed to send OTP");
-        });
+  const LoginRequest = () => {
+    if (!username) {
+      return configResponse.errorMSG(`Please enter your phone number or email`);
     }
+    setIsLoading(true);
+    const data = isNumber(username)
+      ? { phone: username, otp: true }
+      : { email: username, otp: true };
+    loginUpRequest(data)
+      .then(async (response) => {
+        setIsLoading(false);
+        if (response?.status === 200) {
+          setGuestMode(false);
+          configResponse.successMSG(response.data.message);
+          navigation.navigate("LoginOtpVerification", {
+            token: response?.data?.token,
+            ...(isNumber(username) && { phone: username }),
+          });
+        } else if (response.data?.errors?.validate?.phone) {
+          configResponse.errorMSG(response.data.errors.validate.phone[0]);
+        } else if (response.data?.errors?.validate?.email) {
+          configResponse.errorMSG(response.data.errors.validate.email[0]);
+        }
+      })
+      .catch((error) => {
+        setIsLoading(false);
+        configResponse.errorMSG(error.message || "Failed to send OTP");
+      });
   };
 
   const handleGuestMode = () => {
     navigation.navigate("DrawerMenu");
     setGuestMode(true);
   };
-  const onChangeUserName = (name) => {
-    setError("");
-    setUsername(name);
-  };
-
-  // const onPasswordChange = (pass) => {
-  //   setError("");
-  //   setPassword(pass);
-  // };
-  const isNumber = (value) => {
-    return !isNaN(parseFloat(value)) && isFinite(value);
-  };
-
-  const validatePhoneNumber = (phoneNumber) => {
-    const phoneRegex = /^[0-9]{10}$/;
-    return phoneRegex.test(phoneNumber);
-  };
-
   const loginType = () => {
-    const placeholderText = selectLoginTypeStatus ? "Phone Number" : "Email";
-
-    if (isNumber(username)) {
-      if (selectLoginTypeOtp) {
-        return (
-          <View style={{ width: "80%" }}>
-            <TextInput
-              style={styles.loginInput}
-              placeholder={placeholderText}
-              placeholderTextColor="black"
-              mode="outlined"
-              value={username}
-              onChangeText={(text) => {
-                onChangeUserName(() => text);
-                onChangePhone(() => text);
-              }}
-              theme={{ color: "#333333" }}
-              textColor="black"
-            />
-
-            <Pressable
-              onPressIn={() => {
-                LoginRequest("PhoneOtp"), setRescheduleAppointment();
-              }}
-              style={[styles.SubmitButton, { marginBottom: 10 }]}
-            >
-              <Text style={styles.SubmitButtonText}>Send Otp</Text>
-            </Pressable>
-            <TouchableOpacity
-              style={[
-                styles.guestBtn,
-                {
-                  flexDirection: "row",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  gap: 4,
-                },
-              ]}
-              disabled={username ? false : true}
-              onPress={() => setSelectLoginTypeOtp(false)}
-            >
-              <Entypo name="arrow-long-left" size={20} color={"white"} />
-              <Text style={styles.guestBtnText}>Go Back</Text>
-            </TouchableOpacity>
-          </View>
-        );
-      } else {
-        return (
-          <View style={{ width: "80%" }}>
-            <TextInput
-              style={styles.loginInput}
-              placeholder={"Enter your mobile number"}
-              placeholderTextColor="black"
-              mode="outlined"
-              value={username}
-              onChangeText={onChangeUserName}
-              theme={{ color: "#333333" }}
-              textColor="black"
-            />
-            <Pressable
-              onPressIn={() => {
-                LoginRequest("PhoneOtp"), setRescheduleAppointment();
-              }}
-              style={styles.SubmitButton}
-            >
-              <Text style={styles.SubmitButtonText}>Send OTP</Text>
-            </Pressable>
-          </View>
-        );
-      }
-    } else {
-      if (selectLoginTypeOtp) {
-        return (
-          <View style={{ width: "80%", alignSelf: "center" }}>
-            <TextInput
-              style={styles.loginInput}
-              placeholder={placeholderText}
-              placeholderTextColor="black"
-              mode="outlined"
-              value={username}
-              onChangeText={onChangeUserName}
-              theme={{ color: "#333333" }}
-              textColor="black"
-            />
-            <Pressable
-              onPressIn={() => {
-                LoginRequest("EmailOtp"), setRescheduleAppointment();
-              }}
-              style={[styles.SubmitButton, { marginBottom: 10 }]}
-            >
-              <Text style={styles.SubmitButtonText}>Send Otp</Text>
-            </Pressable>
-            <TouchableOpacityBase
-              style={[
-                styles.guestBtn,
-                {
-                  flexDirection: "row",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  gap: 4,
-                },
-              ]}
-              onPress={() => setSelectLoginTypeOtp(false)}
-            >
-              <Entypo name="arrow-long-left" size={20} color={"white"} />
-              <TextInput
-                style={styles.guestBtnText}
-              >
-                Go Back
-              </TextInput>
-            </TouchableOpacityBase>
-          </View>
-        );
-      } else {
-        return (
-          <View style={{ width: "80%" }}>
-            <TextInput
-              style={styles.loginInput}
-              placeholder={"Enter your mobile number"}
-              placeholderTextColor="black"
-              mode="outlined"
-              value={username}
-              onChangeText={onChangeUserName}
-              theme={{ color: "#333333" }}
-              textColor="black"
-            />
-            <Pressable
-              onPressIn={() => {
-                LoginRequest("EmailPassword"), setRescheduleAppointment();
-              }}
-              style={styles.SubmitButton}
-            >
-              <Text style={styles.SubmitButtonText}>Send OTP</Text>
-            </Pressable>
-          </View>
-        );
-      }
-    }
+    return (
+      <View style={{ width: "80%" }}>
+        <TextInput
+          style={styles.loginInput}
+          placeholder="Enter Email or phone number"
+          placeholderTextColor="black"
+          mode="outlined"
+          value={username}
+          onChangeText={setUsername}
+          theme={{ color: "#333333" }}
+          textColor="black"
+          left={
+           <TextInput.Icon icon={EmailIcon} />
+          }
+        />
+        <Pressable
+          onPressIn={LoginRequest}
+          style={[styles.SubmitButton, { marginBottom: 10 }]}
+        >
+          <Text style={styles.SubmitButtonText}>Send OTP</Text>
+        </Pressable>
+      </View>
+    );
   };
+
+  if (!fontsLoaded) {
+    return (
+      <View style={{ backgroundColor: "black" }}>
+        <Image
+          resizeMode="cover"
+          style={{
+            height: hp("100%"),
+            backgroundColor: "black",
+            display: "flex",
+            width: wp("100%"),
+            alignSelf: "center",
+          }}
+          source={Background}
+        />
+      </View>
+    );
+  }
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.container}>
@@ -380,95 +148,24 @@ function Login({ navigation }) {
             <View style={styles.bottomLogoContainer}>
               <Image source={logo} style={styles.bottomLogo} />
             </View>
-
-            <Text style={styles.heading}>Welcome </Text>
+            <Text style={styles.heading}>Welcome</Text>
             <View style={styles.select}>
-              <Text
-                style={[
-                  styles.text_dis,
-                  { fontWeight: "bold" },
-                ]}
-              >
-                Login As
-              </Text>
+              <Text style={[styles.text_dis, { fontWeight: "bold" }]}>Login As</Text>
               <View style={styles.radioWrapper}>
-                <RadioButton.Android
-                  value="first"
-                  color="#D1AE6C"
-                  status={"checked"}
-                />
+                <RadioButton.Android value="client" color="#D1AE6C" status="checked" />
                 <Text style={styles.selectText}>Client</Text>
               </View>
               <View style={styles.radioWrapper}>
                 <RadioButton.Android
-                  value="first"
-                  status={"unchecked"}
+                  value="staff"
+                  status="unchecked"
                   color="#D1AE6C"
-                  onPress={() => {
-                    navigation.navigate("StaffMain");
-                  }}
+                  onPress={() => navigation.navigate("StaffMain")}
                 />
                 <Text style={styles.selectText}>Staff</Text>
               </View>
             </View>
-            {showLogin ? (
-              loginType()
-            ) : (
-              <View style={{ width: "80%" }}>
-                <TextInput
-                  style={[styles.loginInput]}
-                  placeholder="Enter your mobile number"
-                  placeholderTextColor="black"
-                  keyboardType="numeric"
-                  value={username}
-                  onChangeText={onChangeUserName}
-                  theme={{ color: "#333333" }}
-                  textColor="black"
-                  left={
-                    <TextInput.Icon
-                      icon={() => <Icon name="phone-in-talk" size={24} color="#D1AE6C" />}
-                    />
-                  }
-                />
-                <Pressable
-                  onPressIn={() => {
-                    LoginRequest("PhoneOtp"), setRescheduleAppointment();
-                  }}
-                  style={[styles.SubmitButton, { marginBottom: 10 }]}
-                >
-                  <Text style={styles.SubmitButtonText}>Login via OTP</Text>
-                </Pressable>
-                {/* <TouchableOpacity
-                  style={[
-                    styles.guestBtn,
-                    {
-                      flexDirection: "row",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      gap: 4,
-                    },
-                  ]}
-                  disabled={username ? false : true}
-                  onPress={() => {
-                    if (validatePhoneNumber(username)) {
-                      setShowLogin(() => true);
-                    } else {
-                      configResponse.errorMSG("Enter a valid phone number");
-                    }
-                  }}
-                >
-                  <Text
-                    style={styles.guestBtnText}
-                    disabled={username ? false : true}
-                    onPress={() => setShowLogin(() => true)}
-                  >
-                    Next
-                  </Text>
-                  <Entypo name="arrow-long-right" size={20} color={"white"} />
-                </TouchableOpacity> */}
-              </View>
-            )}
-
+            {loginType()}
             <Text style={[styles.text_dis, { marginVertical: 10 }]}>OR</Text>
             <Pressable
               onPressIn={handleGuestMode}
@@ -490,9 +187,7 @@ function Login({ navigation }) {
                   styles.LinkButton,
                   { fontWeight: "bold", color: "#D1AE6C" },
                 ]}
-              >
-                Create Your Account
-              </Text>
+              >Create Your Account</Text>
             </Pressable>
           </View>
         </ImageBackground>
@@ -500,9 +195,12 @@ function Login({ navigation }) {
     </SafeAreaView>
   );
 }
-
+Login.propTypes = {
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func.isRequired,
+  }).isRequired,
+};
 export default Login;
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -514,7 +212,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     width: "100%",
   },
-
   signUp: {
     display: "flex",
     flexDirection: "row",
@@ -602,7 +299,6 @@ const styles = StyleSheet.create({
     color: "#ffffff",
     textAlign: "center",
     fontFamily: "Inter_400Regular",
-
     fontSize: 16,
     fontWeight: "bold",
   },

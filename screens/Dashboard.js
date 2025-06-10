@@ -58,7 +58,7 @@ const UserProfileSection = ({ guestMode, userProfile, userName, navigation }) =>
         ) : (
           <Image
             resizeMode="cover"
-            style={[styles.userProfile, { width: 80, height: 80, borderRadius: 50 }]}
+            style={[styles.userProfile]}
             source={{ uri: userProfile }}
           />
         )}
@@ -156,7 +156,9 @@ LocationSelector.propTypes = {
   _location: PropTypes.func.isRequired,
   onPressIn: PropTypes.func.isRequired,
   onPressOut: PropTypes.func.isRequired,
-  location: PropTypes.object.isRequired,
+  location: PropTypes.shape({
+    address: PropTypes.string,
+  }).isRequired,
   isTablet: PropTypes.func.isRequired,
 };
 
@@ -214,7 +216,6 @@ WhatsNewSection.propTypes = {
   dummyData: PropTypes.array.isRequired,
   isTablet: PropTypes.func.isRequired,
 };
-
 const TopServicesSection = ({ getCategoryData, navigation }) => (
   <View style={[styles.newSection]}>
     <Text style={[styles.commonHeading]}>Top Services</Text>
@@ -443,7 +444,6 @@ const Dashboard = ({ navigation }) => {
         setIsLoading(false);
         if (response?.status == 200) {
           const output = response?.data?.data;
-          console.log(output, "output");
         } else {
           configResponse.errorMSG(response?.data?.message);
         }
@@ -461,7 +461,6 @@ const Dashboard = ({ navigation }) => {
       .then(async (response) => {
         if (response?.status == 200) {
           const output = response?.data;
-          console.log(output);
           const pic = output["pic"];
           setUserProfile(pic);
           setUserName(`${output["first_name"]} ${output["last_name"]}`);
@@ -517,7 +516,6 @@ const Dashboard = ({ navigation }) => {
   useEffect(() => {
     newsData()
       .then((response) => {
-        console.log("News response:", response?.data);
         setNewData(() => response.data);
       })
       .catch((err) => {
@@ -579,7 +577,7 @@ const Dashboard = ({ navigation }) => {
                       _location={_location}
                       onPressIn={onPressIn}
                       onPressOut={onPressOut}
-                      location={location}
+                      location={typeof location === 'object' && location !== null ? location : { address: "" }}
                       isTablet={isTablet}
                     />
                     {guestMode && <GuestMessage navigation={navigation} />}
@@ -716,7 +714,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 8,
   },
-
   searchIcon: {
     position: "absolute",
     right: 20,
@@ -734,6 +731,9 @@ const styles = StyleSheet.create({
   userProfile: {
     borderRadius: 100,
     marginTop: 15,
+    width: 90,
+    height: 90,
+    borderRadius: 50
   },
   name: {
     marginLeft: 20,
@@ -877,8 +877,8 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
   image: {
-    width: 90,
-    height: 90,
+    width: 80,
+    height: 80,
     borderRadius: 50,
   },
 });

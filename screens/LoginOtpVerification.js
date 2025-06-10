@@ -1,19 +1,15 @@
 import * as React from "react";
+import PropTypes from 'prop-types';
 import {
   View,
   Text,
   StyleSheet,
   ImageBackground,
-  SafeAreaView,
   Pressable,
   TextInput,
   Image,
-  PixelRatio,
-  Dimensions,
   KeyboardAvoidingView,
 } from "react-native";
-// packages
-// import AppLoading from 'expo-app-loading';
 import {
   useFonts,
   Inter_400Regular,
@@ -25,8 +21,6 @@ import configResponse from "../config/constant";
 // services
 import { ResendOtpRequest } from "../service/Otp";
 import { AuthContext } from "../helper/AuthContext";
-// images
-//import Background from "../assets/images/background/Hair_Salon_Stations.jpg";
 import Background from "../assets/images/background/SplashBackground.png";
 import {
   widthPercentageToDP as wp,
@@ -41,12 +35,11 @@ function LoginOtpVerification({ route, navigation }) {
   const { signIn } = React.useContext(AuthContext);
   const [resendOTPTimer, setResendOTPTimer] = React.useState(60);
   const [isResendDisabled, setIsResendDisabled] = React.useState(false);
-  const { token, phone } = route.params;
+  const { token } = route.params;
   let [fontsLoaded] = useFonts({
     Inter_400Regular,
     Inter_700Bold,
   });
-
 
   React.useEffect(() => {
     let interval;
@@ -56,7 +49,7 @@ function LoginOtpVerification({ route, navigation }) {
           if (prevTimer <= 1) {
             clearInterval(interval);
             setIsResendDisabled(false);
-            return 60; // Reset timer
+            return 60; 
           }
           return prevTimer - 1;
         });
@@ -106,7 +99,6 @@ function LoginOtpVerification({ route, navigation }) {
 
   if (!fontsLoaded) {
     return (
-      <>
         <View style={{ backgroundColor: "black" }}>
           <Image
             resizeMode="contain"
@@ -114,13 +106,10 @@ function LoginOtpVerification({ route, navigation }) {
               height: hp("100%"),
               backgroundColor: "black",
               display: "flex",
-
-              //alignSelf: "center",
             }}
             source={splash}
           />
         </View>
-      </>
     );
   }
   return (
@@ -143,9 +132,8 @@ function LoginOtpVerification({ route, navigation }) {
             />
             <Text style={styles.heading}>OTP Verification</Text>
             <Text style={styles.text_dis}>
-              Please enter the verification code sent to your registered Phone
-              Number
-            </Text>
+              Please enter the verification code sent to your registered Email / Phone
+              number</Text>
             <TextInput
               style={styles.input}
               placeholderTextColor="#808080"
@@ -176,7 +164,14 @@ function LoginOtpVerification({ route, navigation }) {
     </KeyboardAvoidingView>
   );
 }
-
+LoginOtpVerification.propTypes = {
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func.isRequired,
+  }).isRequired,
+  route: PropTypes.shape({
+    params: PropTypes.object,
+  }).isRequired,
+};
 export default LoginOtpVerification;
 
 const styles = StyleSheet.create({
@@ -231,8 +226,6 @@ const styles = StyleSheet.create({
     fontSize: 16 * responsive(),
   },
   SubmitButton: {
-    width: 300,
-    padding: 10,
     backgroundColor: "#D1AE6C",
     borderRadius: 40,
     width: 300,

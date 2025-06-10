@@ -5,8 +5,6 @@ import {
   StyleSheet,
   Pressable,
   Modal,
-  PixelRatio,
-  Dimensions,
 } from "react-native";
 // packages
 import * as SecureStore from "expo-secure-store";
@@ -19,7 +17,6 @@ import { AppStateContext } from "../helper/AppStateContaxt";
 import { ScrollView } from "react-native-gesture-handler";
 import { responsive } from "../helper/responsive";
 import ScreenHeader from "../components/screenHeader";
-import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from 'expo-linear-gradient';
 
 export default function Location() {
@@ -27,24 +24,21 @@ export default function Location() {
     React.useContext(AppStateContext);
   const [isLoading, setIsLoading] = useState(false);
   const [getLocation, setGetLocation] = useState([]);
-  const [modalLocation, setModalLocation] = useState(false);
   const [userLocation, setUserLocation] = useState(1);
   async function selectLocation(loc) {
     await SecureStore.setItemAsync("location", `${loc.id}`);
-    // await SecureStore.setItemAsync("ModalLocation", 'false')
 
     setLocation(loc);
-    setModalLocation(false);
     setLocationModal(!locationModal);
   }
-
 function Item() {
   const itemdata = [];
 
-  for (const [key, value] of Object.entries(getLocation)) {
+  for (const [key,value] of Object.entries(getLocation)) {
     itemdata.push(
       <Pressable
         key={value["id"]}
+        datakey={key}
         onPress={() => selectLocation(value)}
         style={[
           styles.SubUlgrid,
@@ -74,7 +68,6 @@ function Item() {
       </Pressable>
     );
   }
-
   return itemdata;
 }
   useEffect(() => {
@@ -104,9 +97,7 @@ function Item() {
       setLocation(loc);
     }
   }, [getLocation]);
-  const navigation = useNavigation();
   const closeModal = () => {
-    //setModalLocation(false);
     setLocationModal(false);
   };
   return (
@@ -208,29 +199,14 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   centeredView: {
-    // flex: 1,
-    // //justifyContent: "center",
-    // //alignItems: "center",
-    // backgroundColor: "#000000a8",
     flex: 1,
-    // justifyContent: "center",
-    // alignItems: "center",
     backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   modalView: {
-    // margin: 20,
-    // backgroundColor: "#ffffff",
-    // height: "80%",
-    // borderRadius: 5,
-    // paddingVertical: 30,
-    // width: "80%",
-    // position: "relative",
     backgroundColor: "#ffffff",
     borderRadius: 5,
-    //paddingVertical: 30,
-    width: "100%", // Adjust width as needed
-    height: "100%", // Adjust height as needed
-    // Optional: Add overflow property to handle content overflow
+    width: "100%", 
+    height: "100%", 
     overflow: "hidden",
   },
   textStyle: {
