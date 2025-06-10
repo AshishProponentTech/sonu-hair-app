@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
     letterSpacing: 1.5
   },
   developerText: {
-    fontSize: wp("3%"),
+    fontSize: wp("4%"),
     fontFamily: Platform.select({ ios: "System", android: "sans-serif" }),
     color: "white",
     opacity: 0.8,

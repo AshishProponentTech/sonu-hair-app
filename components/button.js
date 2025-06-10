@@ -1,6 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import React from "react";
-import configResponse from "../config/constant";
+import { Text, StyleSheet, TouchableOpacity } from "react-native";
 const button = ({ title, onPress, buttonTextStyle, buttonStyle }) => {
   return (
     <TouchableOpacity
@@ -23,7 +21,6 @@ const button = ({ title, onPress, buttonTextStyle, buttonStyle }) => {
 export default button;
 const styles = StyleSheet.create({
   button: {
-    //backgroundColor: "#FFD700",
     backgroundColor: "#D2AE6A",
     paddingHorizontal: 5,
     paddingVertical: 5,
@@ -40,8 +37,6 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 16,
-    //fontFamily: configResponse.fontFamily,
-    //color: "#000000",
     color: "white",
     fontWeight: "700",
     marginTop: 1,

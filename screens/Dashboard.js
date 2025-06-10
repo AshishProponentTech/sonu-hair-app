@@ -729,7 +729,6 @@ const styles = StyleSheet.create({
     padding: 15,
   },
   userProfile: {
-    borderRadius: 100,
     marginTop: 15,
     width: 90,
     height: 90,

@@ -1,4 +1,5 @@
-import * as React from "react";
+import { useContext, useState, useRef } from "react";
+import PropTypes from "prop-types";
 import {
   View,
   Text,
@@ -30,25 +31,23 @@ import Background from "../assets/images/background/SplashBackground.png";
 import { AppStateContext } from "../helper/AppStateContaxt";
 
 import {
-  widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import splash from "../assets/splash.png";
 import { responsive } from "../helper/responsive";
 import * as Yup from "yup";
-import { err } from "react-native-svg";
 
 function SignUp({ navigation }) {
-  const { setGuestMode } = React.useContext(AppStateContext);
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [first_name, onChangeFirstName] = React.useState(null);
-  const [last_name, onChangeLastName] = React.useState(null);
-  const [email, onChangeEmail] = React.useState(null);
-  const [phone, onChangePhone] = React.useState(null);
-  const [password, setPassword] = React.useState(null);
+  const { setGuestMode } = useContext(AppStateContext);
+  const [isLoading, setIsLoading] = useState(false);
+  const [firstName, setFirstName] = useState(null);
+  const [lastName, setLastName] = useState(null);
+  const [email, setEmail] = useState(null);
+  const [phone, setPhone] = useState(null);
+  const [password, setPassword] = useState(null);
 
-  const phoneInput = React.useRef(null);
-  const [formattedValue, setFormattedValue] = React.useState("");
+  const phoneInput = useRef(null);
+  const [formattedValue, setFormattedValue] = useState("");
 
   let [fontsLoaded] = useFonts({
     Inter_400Regular,
@@ -57,170 +56,75 @@ function SignUp({ navigation }) {
 
   if (!fontsLoaded) {
     return (
-      <>
-        <View style={{ backgroundColor: "black" }}>
-          <Image
-            resizeMode="cover"
-            style={{
-              height: hp("100%"),
-              backgroundColor: "black",
-              display: "flex",
-              alignSelf: "center",
-            }}
-            source={splash}
-          />
-        </View>
-      </>
+      <View style={{ backgroundColor: "black" }}>
+        <Image
+          resizeMode="cover"
+          style={{
+            height: hp("100%"),
+            backgroundColor: "black",
+            display: "flex",
+            alignSelf: "center",
+          }}
+          source={splash}
+        />
+      </View>
     );
   }
-  // const SignUpRequest = () => {
-  //   const country_code = formattedValue;
-  //   const dial_code = phoneInput.current?.getCountryCode();
+  const validateFields = async ({ firstName, lastName, email, password, formattedValue }) => {
+    if (!firstName) throw new Error("Enter first name");
+    if (!lastName) throw new Error("Enter last name");
+    if (!email) throw new Error("Enter email id");
+    if (!password) throw new Error("Enter Password");
+    if (!formattedValue) throw new Error("Please enter your phone number");
 
-  //   // Check all conditions for validity
-  //   if (!first_name) {
-  //     return configResponse.errorMSG("Enter first name");
-  //   }
-  //   if (!last_name) {
-  //     return configResponse.errorMSG("Enter last name");
-  //   }
-  //   if (!email) {
-  //     return configResponse.errorMSG("Enter email id");
-  //   }
-  //   if (!password) {
-  //     return configResponse.errorMSG("Enter Password");
-  //   }
-  //   if (!country_code) {
-  //     return configResponse.errorMSG("Please enter your phone number");
-  //   }
+    await Yup.object({
+      firstName: Yup.string()
+        .matches(/^[a-zA-Z]+$/, "First Name should only contain letters")
+        .required("First Name is required"),
+      lastName: Yup.string()
+        .matches(/^[a-zA-Z]+$/, "Last Name should only contain letters")
+        .required("Last Name is required"),
+      email: Yup.string()
+        .email("Invalid email")
+        .matches(
+          /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+          "Invalid email address"
+        )
+        .required("Email is required"),
+      password: Yup.string()
+        .min(8, "Password must be at least 8 characters")
+        .required("Password is required"),
+    }).validate({ firstName, lastName, email, password });
+  };
 
-  //   Yup.object({
-  //     first_name: Yup.string()
-  //       .matches(/^[a-zA-Z]+$/, "First Name should only contain letters")
-  //       .required("First Name is required"),
-  //     last_name: Yup.string()
-  //       .matches(/^[a-zA-Z]+$/, "Last Name should only contain letters")
-  //       .required("Last Name is required"),
-  //     email: Yup.string()
-  //       .email("Invalid email")
-  //       .matches(
-  //         /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-  //         "Invalid email address"
-  //       )
-  //       .required("Email is required"),
-  //     password: Yup.string()
-  //       .min(8, "Password must be at least 8 characters")
-  //       .required("Password is required"),
-  //   })
-  //     .validate({
-  //       first_name,
-  //       last_name,
-  //       email,
-  //       password,
-  //     })
-  //     .then(() => {
-  //       setIsLoading(true);
-  //       const data = {
-  //         first_name,
-  //         last_name,
-  //         email,
-  //         phone,
-  //         country_code,
-  //         password,
-  //         dial_code,
-  //       };
-  //       signUpRequest(data);
-  //       console
-  //         .log("value", data)
-  //         .then(async (response) => {
-  //           console.log("response", response.data);
-  //           setIsLoading(false);
-  //           if (response?.status == 200 || response?.status == 201) {
-  //             onChangeFirstName(null);
-  //             onChangeLastName(null);
-  //             onChangeEmail(null);
-  //             onChangePhone(null);
-  //             setGuestMode(false);
-  //             navigation.navigate("LoginOtpVerification", {
-  //               token: response?.data?.data?.token,
-  //             });
-  //           } else if (response.data.errors) {
-  //             if (response.data.errors.email) {
-  //               configResponse.errorMSG(response.data.errors.email[0]);
-  //             } else if (response.data.errors.phone) {
-  //               configResponse.errorMSG(response.data.errors.phone[0]);
-  //             } else if (
-  //               response.data.errors.phone &&
-  //               response.data.errors.email
-  //             ) {
-  //               configResponse.errorMSG(response.data.errors.phone[0]);
-  //             }
-  //           } else {
-  //             const resultError = response?.data?.errors?.validate;
-  //             let errorlist = "";
-  //             for (const [key, value] of Object.entries(resultError)) {
-  //               errorlist += `${value}\n`;
-  //             }
-  //             configResponse.errorMSG(errorlist);
-  //           }
-  //         })
-  //         .catch((error) => {
-  //           console.log("Data Error", error);
-  //         });
-  //     })
-  //     .catch((error) => {
-  //       configResponse.errorMSG(error.message);
-  //     });
-  // };
+  const handleErrorResponse = (response) => {
+    if (response.data.errors) {
+      if (response.data.errors.email) {
+        configResponse.errorMSG(response.data.errors.email[0]);
+        return true;
+      }
+      if (response.data.errors.phone) {
+        configResponse.errorMSG(response.data.errors.phone[0]);
+        return true;
+      }
+      if (response.data.errors.validate) {
+        const errorlist = Object.values(response.data.errors.validate).join('\n');
+        configResponse.errorMSG(errorlist);
+        return true;
+      }
+    }
+    return false;
+  };
+
   const SignUpRequest = async () => {
     try {
-      // Validate input fields
-      if (!first_name) {
-        return configResponse.errorMSG("Enter first name");
-      }
-      if (!last_name) {
-        return configResponse.errorMSG("Enter last name");
-      }
-      if (!email) {
-        return configResponse.errorMSG("Enter email id");
-      }
-      if (!password) {
-        return configResponse.errorMSG("Enter Password");
-      }
-      if (!formattedValue) {
-        return configResponse.errorMSG("Please enter your phone number");
-      }
-
-      // Validation with Yup schema
-      await Yup.object({
-        first_name: Yup.string()
-          .matches(/^[a-zA-Z]+$/, "First Name should only contain letters")
-          .required("First Name is required"),
-        last_name: Yup.string()
-          .matches(/^[a-zA-Z]+$/, "Last Name should only contain letters")
-          .required("Last Name is required"),
-        email: Yup.string()
-          .email("Invalid email")
-          .matches(
-            /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-            "Invalid email address"
-          )
-          .required("Email is required"),
-        password: Yup.string()
-          .min(8, "Password must be at least 8 characters")
-          .required("Password is required"),
-      }).validate({
-        first_name,
-        last_name,
-        email,
-        password,
-      });
+      await validateFields({ firstName, lastName, email, password, formattedValue });
 
       setIsLoading(true);
 
       const data = {
-        first_name,
-        last_name,
+        firstName,
+        lastName,
         email,
         phone,
         country_code: "+91",
@@ -228,38 +132,25 @@ function SignUp({ navigation }) {
         dial_code: phoneInput.current?.getCountryCode(),
       };
 
-      // Call signUpRequest and wait for response
       const response = await signUpRequest(data);
-
       setIsLoading(false);
 
       if (response?.status === 200 || response?.status === 201) {
-        onChangeFirstName(null);
-        onChangeLastName(null);
-        onChangeEmail(null);
-        onChangePhone(null);
+        setFirstName(null);
+        setLastName(null);
+        setEmail(null);
+        setPhone(null);
         setGuestMode(false);
         navigation.navigate("LoginOtpVerification", {
           token: response?.data?.data?.token,
         });
-      } else if (response.data.errors) {
-        if (response.data.errors.email) {
-          configResponse.errorMSG(response.data.errors.email[0]);
-        } else if (response.data.errors.phone) {
-          configResponse.errorMSG(response.data.errors.phone[0]);
-        } else if (response.data.errors.validate) {
-          // Handle validation errors
-          let errorlist = "";
-          for (const [key, value] of Object.entries(
-            response.data.errors.validate
-          )) {
-            errorlist += `${value}\n`;
-          }
-          configResponse.errorMSG(errorlist);
-        }
-      } else {
+        return;
+      }
+
+      if (!handleErrorResponse(response)) {
         configResponse.errorMSG("Failed to sign up. Please try again.");
       }
+
     } catch (error) {
       setIsLoading(false);
       console.log("Error", error);
@@ -289,21 +180,21 @@ function SignUp({ navigation }) {
             <TextInput
               style={styles.input}
               placeholderTextColor="#808080"
-              onChangeText={onChangeFirstName}
-              value={first_name}
+              onChangeText={setFirstName}
+              value={firstName}
               placeholder="First Name"
             />
             <TextInput
               style={styles.input}
               placeholderTextColor="#808080"
-              onChangeText={onChangeLastName}
-              value={last_name}
+              onChangeText={setLastName}
+              value={lastName}
               placeholder="Last Name"
             />
             <TextInput
               style={styles.input}
               placeholderTextColor="#808080"
-              onChangeText={onChangeEmail}
+              onChangeText={setEmail}
               value={email}
               textContentType="emailAddress"
               placeholder="Email"
@@ -322,7 +213,7 @@ function SignUp({ navigation }) {
               defaultCode="CA"
               layout="first"
               onChangeText={(text) => {
-                onChangePhone(text);
+                setPhone(text);
               }}
               onChangeFormattedText={(text) => {
                 setFormattedValue(text);
@@ -346,9 +237,7 @@ function SignUp({ navigation }) {
                   styles.LinkButton,
                   { fontWeight: "bold", color: "#D1AE6C" },
                 ]}
-              >
-                Sign in
-              </Text>
+              >Sign in</Text>
             </Pressable>
           </View>
         </ScrollView>
@@ -356,7 +245,9 @@ function SignUp({ navigation }) {
     </SafeAreaView>
   );
 }
-
+SignUp.propTypes = {
+  navigation: PropTypes.object.isRequired,
+};
 export default SignUp;
 
 const styles = StyleSheet.create({
@@ -387,7 +278,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   heading: {
-    fontSize: 16,
+    fontSize: 18,
     textAlign: "center",
     fontWeight: "700",
     color: "#ffffff",
@@ -403,14 +294,14 @@ const styles = StyleSheet.create({
   },
   input: {
     minWidth: 300 * responsive(),
-    minHeight: 40 * responsive(),
+    minHeight: 45 * responsive(),
     borderColor: "#ddd",
     backgroundColor: "#ffffff",
     borderWidth: 1,
     marginBottom: 18,
     marginLeft: "auto",
     marginRight: "auto",
-    borderRadius: 3,
+    borderRadius: 5,
     color: "#000000",
     fontSize: 14,
     paddingTop: 3,
