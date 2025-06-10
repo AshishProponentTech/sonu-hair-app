@@ -1,5 +1,4 @@
-import * as React from "react";
-import { Dimensions } from "react-native";
+import PropTypes from "prop-types";
 import {
   View,
   StyleSheet,
@@ -7,7 +6,6 @@ import {
   Image,
   Pressable,
   ScrollView,
-  PixelRatio,
 } from "react-native";
 import { responsive } from "../helper/responsive";
 
@@ -38,6 +36,22 @@ const NewsDetails = ({ route, navigation }) => {
       </View>
     </ScrollView>
   );
+};
+
+NewsDetails.propTypes = {
+  route: PropTypes.shape({
+    params: PropTypes.shape({
+      data: PropTypes.shape({
+        news_image: PropTypes.string,
+        title: PropTypes.string,
+        date: PropTypes.string,
+        description: PropTypes.string,
+      }),
+    }),
+  }).isRequired,
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func.isRequired,
+  }).isRequired,
 };
 
 export default NewsDetails;
@@ -71,7 +85,7 @@ const styles = StyleSheet.create({
   },
   slider: {
     height: 200,
-    width: "100%", // Set the width to the screen width to fit one item at a time
+    width: "100%", 
   },
 
   link: {
@@ -85,7 +99,7 @@ const styles = StyleSheet.create({
   },
   element: {
     borderWidth: 1,
-    width: "100%", // Set the width to the screen width to fit one item at a time
+    width: "100%", 
     borderColor: "lightgray",
     overflow: "hidden",
   },
