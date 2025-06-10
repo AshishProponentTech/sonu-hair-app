@@ -10,16 +10,13 @@ import { Provider as PaperProvider } from "react-native-paper";
 import Decider from "./screens/Decider";
 import store from "./staff/src/store";
 import { ActivityIndicator, View } from "react-native";
-
 export default function App() {
   const Stack = createStackNavigator();
-
   const [fontsLoaded] = useFonts({
     Inter_400Regular,
     Inter_700Bold,
-    primary_font: Inter_400Regular, // Optional: alias for consistent naming
+    primary_font: Inter_400Regular,
   });
-
   if (!fontsLoaded) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -27,7 +24,6 @@ export default function App() {
       </View>
     );
   }
-
   return (
     <SafeAreaProvider>
       <Provider store={store}>

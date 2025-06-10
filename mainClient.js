@@ -1,10 +1,10 @@
 import Root from './helper/Root';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useFonts, Inter_400Regular, Inter_700Bold } from '@expo-google-fonts/inter';
 import Loader from './helper/loader';
 import { responsive } from './helper/responsive';
 
-function Client({ navigation }) {
+function Client() {
   let [fontsLoaded] = useFonts({
     Inter_400Regular, 
     Inter_700Bold,

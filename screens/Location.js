@@ -11,8 +11,6 @@ import {
 // packages
 import * as SecureStore from "expo-secure-store";
 import Loader from "../helper/loader";
-import Icon from "react-native-vector-icons/Feather";
-import Entypo from "react-native-vector-icons/Entypo";
 // constants
 import configResponse from "../config/constant";
 // services
@@ -25,17 +23,17 @@ import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from 'expo-linear-gradient';
 
 export default function Location() {
-  const { locationModal, setLocationModal, location, setLocations } =
+  const { locationModal, setLocationModal, location, setLocation } =
     React.useContext(AppStateContext);
   const [isLoading, setIsLoading] = useState(false);
-  const [getLocation, setLocation] = useState([]);
+  const [getLocation, setGetLocation] = useState([]);
   const [modalLocation, setModalLocation] = useState(false);
   const [userLocation, setUserLocation] = useState(1);
   async function selectLocation(loc) {
     await SecureStore.setItemAsync("location", `${loc.id}`);
     // await SecureStore.setItemAsync("ModalLocation", 'false')
 
-    setLocations(loc);
+    setLocation(loc);
     setModalLocation(false);
     setLocationModal(!locationModal);
   }
@@ -90,7 +88,7 @@ function Item() {
           setIsLoading(false);
           if (response?.status == 200) {
             const output = response?.data?.data;
-            setLocation(output);
+            setGetLocation(output);
           }
         })
         .catch((error) => {
@@ -103,7 +101,7 @@ function Item() {
   useEffect(() => {
     if (getLocation.length) {
       const loc = getLocation.find((l) => userLocation == l.id);
-      setLocations(loc);
+      setLocation(loc);
     }
   }, [getLocation]);
   const navigation = useNavigation();
