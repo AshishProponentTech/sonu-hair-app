@@ -23,46 +23,40 @@ import { responsive } from "../helper/responsive";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { isTablet } from "./tablet";
 
+const HomeIcon = ({ size }) => <Icon name="home" color="white" size={size} />;
+HomeIcon.propTypes = { size: PropTypes.number.isRequired };
+
+const AppointmentIcon = ({ size }) => <Icon name="check-circle" color="white" size={size} />;
+AppointmentIcon.propTypes = { size: PropTypes.number.isRequired };
+
+const AboutIcon = ({ size }) => <Icon name="alert-circle" color="white" size={size} />;
+AboutIcon.propTypes = { size: PropTypes.number.isRequired };
+
+const ContactIcon = ({ size }) => <Icon name="message-circle" color="white" size={size} />;
+ContactIcon.propTypes = { size: PropTypes.number.isRequired };
+
+const ProfileIcon = ({ size }) => <Icon name="user" color="white" size={size} />;
+ProfileIcon.propTypes = { size: PropTypes.number.isRequired };
+
+const ShareIcon = ({ size }) => <Icon name="share-2" color="white" size={size} />;
+ShareIcon.propTypes = { size: PropTypes.number.isRequired };
+
+const RateIcon = ({ size }) => <Icon name="star" color="white" size={size} />;
+RateIcon.propTypes = { size: PropTypes.number.isRequired };
+
+const CloseAccountIcon = ({ size }) => <Icon name="user-x" color="white" size={size} />;
+CloseAccountIcon.propTypes = { size: PropTypes.number.isRequired };
+const GuestUser= ({ size }) => <Icon name="user-plus" color={color} size={size} />;
+GuestUser.propTypes = { size: PropTypes.number.isRequired };
+
 function HeaderDrawerMenu(props) {
   const isFocus = useIsFocused();
   const { guestMode } = useContext(AppStateContext);
   const { signOut } = useContext(AuthContext);
   const [userName, setUserName] = useState(null);
-  const [userEmail, setUserEmail] = useState(null);
   const [userProfile, setUserProfile] = useState(null);
   global.GOOGLE_PACKAGE_NAME = "com.sonuhaircut";
   global.APPLE_STORE_ID = "id284882215";
-  const HomeIcon = ({ size }) => (
-    <Icon name="home" color="white" size={size} />
-  );
-
-  const AppointmentIcon = ({ size }) => (
-    <Icon name="check-circle" color="white" size={size} />
-  );
-
-  const AboutIcon = ({ size }) => (
-    <Icon name="alert-circle" color="white" size={size} />
-  );
-
-  const ContactIcon = ({ size }) => (
-    <Icon name="message-circle" color="white" size={size} />
-  );
-
-  const ProfileIcon = ({ size }) => (
-    <Icon name="user" color="white" size={size} />
-  );
-
-  const ShareIcon = ({ size }) => (
-    <Icon name="share-2" color="white" size={size} />
-  );
-
-  const RateIcon = ({ size }) => (
-    <Icon name="star" color="white" size={size} />
-  );
-
-  const CloseAccountIcon = ({ size }) => (
-    <Icon name="user-x" color="white" size={size} />
-  );
   const drawerLabelStyle = {
   fontSize: 14 * responsive(),
   color: "white",
@@ -120,7 +114,6 @@ function HeaderDrawerMenu(props) {
           const output = response?.data;
           const pic = output["pic"];
           setUserProfile(pic);
-          setUserEmail(output["email"]);
           setUserName(`${output["first_name"]} ${output["last_name"]}`);
         } else {
           signOut();
@@ -287,9 +280,7 @@ function HeaderDrawerMenu(props) {
               labelStyle={{
                 fontSize: 14 * responsive(),
               }}
-              icon={({ color, size }) => (
-                <Icon name="user-plus" color={color} size={size} />
-              )}
+              icon={GuestUser}
               label="Sign Up"
               onPress={() => props.navigation.navigate("SignUp")}
             />
