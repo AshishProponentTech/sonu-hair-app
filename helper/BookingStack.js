@@ -1,9 +1,10 @@
-import * as React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import MyHeader from "./header";
 import Profile from "../screens/Profile";
 import UpcomingBooking from "../screens/UpcomingBooking";
-
+function CustomHeader(props) {
+  return <MyHeader {...props} />;
+}
 function BookingStack() {
   const Stack = createNativeStackNavigator();
 
@@ -11,7 +12,7 @@ function BookingStack() {
     <Stack.Navigator
       screenOptions={{
         headerMode: "float",
-        header: (props) => <MyHeader {...props} />,
+        header: CustomHeader,
       }}
     >
       <Stack.Screen
@@ -21,13 +22,10 @@ function BookingStack() {
       />
       <Stack.Screen
         name="UpcomingBooking"
-        options={{ headerShown: false, headerTitle: "Upcoming Booking" }}
         component={UpcomingBooking}
+        options={{ headerShown: false, headerTitle: "Upcoming Booking" }}
       />
-      {/* <Stack.Screen name="Service" options={{headerShown: true, headerTitle: 'Choose Service'}} component={Service} />
-          <Stack.Screen name="Profile" component={Profile} options={{headerShown: true, headerTitle: 'My Profile'}} /> */}
     </Stack.Navigator>
   );
 }
-
 export default BookingStack;

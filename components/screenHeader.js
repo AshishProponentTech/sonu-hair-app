@@ -1,5 +1,4 @@
-import { View, Text, TouchableOpacity, Pressable } from "react-native";
-import React from "react";
+import { View, Text, Pressable } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { isTablet } from "../components/tablet";
 const screenHeader = ({ title, onPress, mainStyle }) => {
@@ -12,9 +11,6 @@ const screenHeader = ({ title, onPress, mainStyle }) => {
           backgroundColor: "#D1AE6C",
           height: "10%",
           paddingHorizontal: 20,
-
-          //justifyContent: "space-between",
-          //position: "relative", // Ensure parent container has relative positioning
         },
         mainStyle,
       ]}

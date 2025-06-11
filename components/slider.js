@@ -1,10 +1,10 @@
-import React, { useEffect, useState, useRef } from "react";
+import PropTypes from 'prop-types';
+import { useEffect, useState } from "react";
 import { View, Text, StyleSheet, Image, Pressable } from "react-native";
 import newsdata from "../service/news";
 import { useIsFocused } from "@react-navigation/core";
 
 import {
-  widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { responsive } from "../helper/responsive";
@@ -60,6 +60,10 @@ const DashboardSlider = ({ navigation }) => {
   );
 };
 
+DashboardSlider.propTypes = {
+  navigation: PropTypes.object.isRequired,
+};
+
 export default DashboardSlider;
 
 const styles = StyleSheet.create({
@@ -74,7 +78,6 @@ const styles = StyleSheet.create({
     marginBottom: 100,
   },
   slider: {
-    height: 150,
     height: Math.max(hp("20%", 150)),
   },
   linkFlex: {
